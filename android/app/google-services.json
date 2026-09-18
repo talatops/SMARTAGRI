@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "775461214160",
+    "firebase_url": "https://smart-agri-system-model-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smart-agri-system-model",
+    "storage_bucket": "smart-agri-system-model.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775461214160:android:8940e430e57e4f685b8bd5",
+        "android_client_info": {
+          "package_name": "com.irada.sas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUPDalBi6maSJzxAa6cIszZKng0P02hZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
