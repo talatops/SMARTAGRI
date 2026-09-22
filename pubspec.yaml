@@ -39,6 +39,9 @@ dependencies:
   firebase_core: ^4.15.0
   firebase_database: ^12.6.0
   riverpod_annotation: ^4.0.7
+  intl: ^0.20.3
+  equatable: ^3.0.0
+  get: ^4.7.3
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,21 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/icons/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/inter.ttf
+          weight: 400
+        - asset: assets/fonts/inter/inter_medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter/inter_semi_bold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/inter_bold.ttf
+          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:
