@@ -70,7 +70,7 @@ class _PumpRow extends StatelessWidget {
       () => GlowIconButton(
         icon: AppAssets.power,
         label: controller.pumpButtonLabel,
-        isActive: controller.isPumpOn.value,
+        isActive: controller.isPumpCommandOn.value,
         size: buttonSize,
         onTap: controller.isPumpControlEnabled ? controller.togglePump : null,
       ),

@@ -38,6 +38,7 @@ class DashboardController extends GetxController {
   final RxBool isRefreshing = false.obs;
   final Rxn<CropProfile> selectedCrop = Rxn<CropProfile>();
   final Rx<PumpMode> pumpMode = PumpMode.auto.obs;
+  final RxBool isPumpCommandOn = false.obs;
   final RxBool isPumpOn = false.obs;
   late final Rx<DateTime> now = clock().obs;
   final Rxn<DateTime> lastUpdated = Rxn<DateTime>();
@@ -96,7 +97,7 @@ class DashboardController extends GetxController {
   String get pumpStatusDescription =>
       isPumpOn.value ? AppStrings.pumpEnabled : AppStrings.pumpDisabled;
 
-  String get pumpButtonLabel => isPumpOn.value ? AppStrings.pumpOn : AppStrings.pumpOff;
+  String get pumpButtonLabel => isPumpCommandOn.value ? AppStrings.pumpOn : AppStrings.pumpOff;
 
   Future<void> loadDashboard({bool isRefresh = false}) async {
     if (isRefresh) {
@@ -129,6 +130,7 @@ class DashboardController extends GetxController {
     snapshot.value = result;
     selectedCrop.value = result.selectedCrop;
     pumpMode.value = result.irrigation.mode;
+    isPumpCommandOn.value = result.irrigation.isPumpCommandOn;
     isPumpOn.value = result.irrigation.isPumpOn;
     lastUpdated.value = result.lastUpdated;
   }
@@ -161,7 +163,7 @@ class DashboardController extends GetxController {
   Future<void> togglePump() async {
     if (!isPumpControlEnabled) return;
     try {
-      await togglePumpUseCase(isOn: !isPumpOn.value);
+      await togglePumpUseCase(isOn: !isPumpCommandOn.value);
     } catch (_) {
       _revert();
     }

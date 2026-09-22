@@ -21,7 +21,11 @@ class DashboardMockDataSource implements DashboardDataSource {
   DashboardMockDataSource({DateTime Function()? clock})
     : clock = clock ?? DateTime.now;
 
-  IrrigationState _irrigation = const IrrigationState(mode: PumpMode.auto, isPumpOn: false);
+  IrrigationState _irrigation = const IrrigationState(
+    mode: PumpMode.auto,
+    isPumpCommandOn: false,
+    isPumpOn: false,
+  );
   CropType _selectedCrop = CropType.wheat;
   final StreamController<void> _changes = StreamController<void>.broadcast();
 
@@ -108,6 +112,7 @@ class DashboardMockDataSource implements DashboardDataSource {
   Future<void> setPumpMode(PumpMode mode) async {
     _irrigation = _irrigation.copyWith(
       mode: mode,
+      isPumpCommandOn: mode.isAuto ? false : _irrigation.isPumpCommandOn,
       isPumpOn: mode.isAuto ? false : _irrigation.isPumpOn,
     );
     _changes.add(null);
@@ -115,7 +120,7 @@ class DashboardMockDataSource implements DashboardDataSource {
 
   @override
   Future<void> togglePump({required bool isOn}) async {
-    _irrigation = _irrigation.copyWith(isPumpOn: isOn);
+    _irrigation = _irrigation.copyWith(isPumpCommandOn: isOn, isPumpOn: isOn);
     _changes.add(null);
   }
 

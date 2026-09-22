@@ -110,6 +110,8 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
       selectedCrop: _crop(base.crops, control[DashboardFirebaseKeys.cropProfile]) ?? base.selectedCrop,
       irrigation: IrrigationState(
         mode: _pumpMode(control[DashboardFirebaseKeys.mode]) ?? base.irrigation.mode,
+        isPumpCommandOn:
+            _bool(control[DashboardFirebaseKeys.pumpCommand]) ?? base.irrigation.isPumpCommandOn,
         isPumpOn: _bool(control[DashboardFirebaseKeys.pumpStatus]) ?? base.irrigation.isPumpOn,
       ),
       lastUpdated: clock(),
