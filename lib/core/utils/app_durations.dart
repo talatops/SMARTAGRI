@@ -12,6 +12,10 @@ abstract final class AppDurations {
 
   static const weatherRefresh = Duration(minutes: 15);
 
+  static const locationTimeout = Duration(seconds: 25);
+
+  static const requestTimeout = Duration(seconds: 20);
+
   static const mockLatency = Duration(milliseconds: 350);
 
   static const loaderSpin = Duration(milliseconds: 1100);

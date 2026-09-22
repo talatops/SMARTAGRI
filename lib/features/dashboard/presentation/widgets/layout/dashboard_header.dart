@@ -12,6 +12,7 @@ import '../../../../../core/utils/app_strings.dart';
 import '../../../../../core/utils/formatters.dart';
 import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
+import '../../../../../core/widgets/shimmer.dart';
 import '../../../../../core/widgets/vertical_divider_line.dart';
 import '../../controller/dashboard_controller.dart';
 
@@ -130,9 +131,28 @@ class _Meta extends StatelessWidget {
       ],
     );
 
+    Widget locationItem() {
+      if (!controller.showLocationPlaceholder) {
+        return item(AppAssets.locationPin, controller.locationLabel);
+      }
+
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(AppAssets.locationPin, size: 16.r, color: AppColors.primaryBlue),
+          WidthBox(width: AppDimensions.s8.w),
+          Shimmer(
+            child: ShimmerBox(
+              width: AppDimensions.skeletonLocationWidth.w,
+              height: AppDimensions.skeletonLocationHeight.h,
+            ),
+          ),
+        ],
+      );
+    }
+
     return Obx(() {
       final now = controller.now.value;
-      final location = controller.snapshot.value?.location ?? AppStrings.location;
 
       return Wrap(
         spacing: AppDimensions.s12.w,
@@ -143,7 +163,7 @@ class _Meta extends StatelessWidget {
           const VerticalDividerLine(height: 20),
           item(AppAssets.clock, Formatters.time(now)),
           const VerticalDividerLine(height: 20),
-          item(AppAssets.locationPin, location),
+          locationItem(),
         ],
       );
     });

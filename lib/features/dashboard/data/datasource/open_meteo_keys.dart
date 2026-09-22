@@ -1,9 +1,6 @@
 abstract final class OpenMeteoKeys {
   static const forecastUrl = 'https://api.open-meteo.com/v1/forecast';
 
-  static const latitude = 33.664388;
-  static const longitude = 73.070117;
-
   static const latitudeParam = 'latitude';
   static const longitudeParam = 'longitude';
   static const currentParam = 'current';

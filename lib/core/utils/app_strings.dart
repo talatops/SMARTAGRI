@@ -74,6 +74,8 @@ abstract final class AppStrings {
   static const thunderstorm = 'Thunderstorm';
   static const unknownCondition = 'Unknown';
   static const weatherUnavailable = 'Weather unavailable';
+  static const locationUnavailable = 'Location unavailable';
+  static const locationSeparator = ', ';
   static const noValue = '--';
 
   static const cropTitle = 'Crop Profile';
