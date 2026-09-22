@@ -45,7 +45,7 @@ class DashboardPage extends GetView<DashboardController> {
                   compositePanel: CompositeMoisturePanel(controller: controller),
                   telemetryPanel: FieldTelemetryPanel(telemetry: snapshot.telemetry),
                   irrigationPanel: IrrigationControlPanel(controller: controller),
-                  weatherPanel: WeatherStatusPanel(weather: snapshot.weather),
+                  weatherPanel: WeatherStatusPanel(controller: controller),
                   cropPanel: CropProfilePanel(controller: controller),
                 ),
                 HeightBox(height: AppDimensions.s16.h),

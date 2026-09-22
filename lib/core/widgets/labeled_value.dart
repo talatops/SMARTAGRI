@@ -12,6 +12,7 @@ class LabeledValue extends StatelessWidget {
   final Color iconColor;
   final String value;
   final String label;
+  final Widget? valuePlaceholder;
 
   const LabeledValue({
     super.key,
@@ -19,6 +20,7 @@ class LabeledValue extends StatelessWidget {
     required this.iconColor,
     required this.value,
     required this.label,
+    this.valuePlaceholder,
   });
 
   @override
@@ -28,13 +30,14 @@ class LabeledValue extends StatelessWidget {
       children: [
         Icon(icon, color: iconColor, size: 20.r),
         HeightBox(height: AppDimensions.s6.h),
-        CustomText(
-          text: value,
-          style: AppTextStyles.tileLabel,
-          fontSize: 15,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-        ),
+        valuePlaceholder ??
+            CustomText(
+              text: value,
+              style: AppTextStyles.tileLabel,
+              fontSize: 15,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+            ),
         HeightBox(height: AppDimensions.s2.h),
         CustomText(
           text: label,

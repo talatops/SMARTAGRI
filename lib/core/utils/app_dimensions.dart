@@ -91,6 +91,11 @@ abstract final class AppDimensions {
   static const double skeletonWeatherBodyMobile = 200;
   static const double skeletonCropBodyMobile = 220;
   static const int skeletonCropRows = 5;
+  static const double skeletonWeatherTempWidth = 110;
+  static const double skeletonWeatherTempHeight = 34;
+  static const double skeletonWeatherConditionWidth = 90;
+  static const double skeletonWeatherValueWidth = 44;
+  static const double skeletonWeatherValueHeight = 16;
   static const double skeletonShortFactor = 0.4;
   static const double skeletonMediumFactor = 0.6;
   static const double skeletonLongFactor = 0.8;
