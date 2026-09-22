@@ -11,4 +11,7 @@ abstract final class AppDurations {
   static const clockTick = Duration(seconds: 1);
 
   static const mockLatency = Duration(milliseconds: 350);
+
+  static const loaderSpin = Duration(milliseconds: 1100);
+  static const loaderSlide = Duration(milliseconds: 1500);
 }

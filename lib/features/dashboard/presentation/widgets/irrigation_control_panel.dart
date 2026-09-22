@@ -125,7 +125,7 @@ class _PumpStatusBlock extends StatelessWidget {
                   width: 9.r,
                   height: 9.r,
                   decoration: BoxDecoration(
-                    color: isOn ? AppColors.success : AppColors.successBright,
+                    color: isOn ? AppColors.success : AppColors.textTertiary,
                     shape: BoxShape.circle,
                   ),
                 ),

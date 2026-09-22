@@ -137,4 +137,29 @@ abstract final class AppTextStyles {
     fontWeight: AppFonts.regular,
     color: AppColors.textTertiary,
   );
+
+  static const loaderTitle = TextStyle(
+    fontFamily: AppFonts.primary,
+    fontSize: 25,
+    fontWeight: AppFonts.bold,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.3,
+    height: 1.25,
+  );
+
+  static const loaderTagline = TextStyle(
+    fontFamily: AppFonts.primary,
+    fontSize: 13,
+    fontWeight: AppFonts.regular,
+    color: AppColors.textSecondary,
+    height: 1.5,
+  );
+
+  static const loaderStatus = TextStyle(
+    fontFamily: AppFonts.primary,
+    fontSize: 11.5,
+    fontWeight: AppFonts.regular,
+    color: AppColors.textTertiary,
+    letterSpacing: 0.2,
+  );
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/extensions/responsive_size_extension.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_dimensions.dart';
+import '../../../../core/widgets/app_loader.dart';
 import '../../../../core/widgets/base_scaffold.dart';
 import '../../../../core/widgets/constants.dart';
 import '../../../../core/widgets/max_width_container.dart';
@@ -25,15 +25,13 @@ class DashboardPage extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return BaseScaffold(
       body: Obx(() {
-        if (controller.isLoading.value) {
+        final snapshot = controller.snapshot.value;
+        if (controller.isLoading.value || snapshot == null) {
           return SizedBox(
             height: MediaQuery.sizeOf(context).height,
-            child: const Center(child: CircularProgressIndicator(color: AppColors.primaryBlue)),
+            child: const AppLoader(),
           );
         }
-
-        final snapshot = controller.snapshot.value;
-        if (snapshot == null) return const SizedBox.shrink();
 
         return MaxWidthContainer(
           child: SelectionArea(

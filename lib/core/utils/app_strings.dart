@@ -78,4 +78,7 @@ abstract final class AppStrings {
   static const appVersion = 'v1.0.0';
 
   static const refreshTooltip = 'Refresh dashboard';
+
+  static const loadingDashboard = 'Loading dashboard…';
+  static const taglineSeparator = ' · ';
 }

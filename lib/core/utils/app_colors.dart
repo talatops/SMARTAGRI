@@ -45,4 +45,10 @@ abstract final class AppColors {
   );
 
   static const compositeGaugeColors = [gaugeBlue, cyan, successBright, gaugeGreen];
+
+  static const loaderRingTrack = Color(0x0FFFFFFF);
+  static const loaderBarTrack = Color(0x12FFFFFF);
+  static const loaderLogoGlow = Color(0x732ECC71);
+
+  static const loaderBarGradient = LinearGradient(colors: [primaryBlue, cyan, success]);
 }
