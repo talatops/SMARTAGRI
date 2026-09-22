@@ -96,10 +96,14 @@ abstract final class AppDimensions {
   static const double skeletonWeatherConditionWidth = 90;
   static const double skeletonWeatherValueWidth = 44;
   static const double skeletonWeatherValueHeight = 16;
+  static const double skeletonLocationWidth = 96;
+  static const double skeletonLocationHeight = 13;
   static const double skeletonShortFactor = 0.4;
   static const double skeletonMediumFactor = 0.6;
   static const double skeletonLongFactor = 0.8;
   static const double skeletonIconFactor = 0.72;
+
+  static const int locationAttempts = 2;
 
   static const double designWidth = maxContentWidth;
 }

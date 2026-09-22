@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../../../core/utils/app_strings.dart';
+import '../../domain/entities/geo_point.dart';
 import '../../domain/entities/weather_snapshot.dart';
 import 'open_meteo_keys.dart';
 import 'weather_data_source.dart';
@@ -11,12 +12,12 @@ class WeatherOpenMeteoDataSource implements WeatherDataSource {
   WeatherOpenMeteoDataSource({required this.client});
 
   @override
-  Future<WeatherSnapshot> fetchCurrentWeather() async {
+  Future<WeatherSnapshot> fetchCurrentWeather(GeoPoint point) async {
     final response = await client.get<Object?>(
       OpenMeteoKeys.forecastUrl,
       query: {
-        OpenMeteoKeys.latitudeParam: '${OpenMeteoKeys.latitude}',
-        OpenMeteoKeys.longitudeParam: '${OpenMeteoKeys.longitude}',
+        OpenMeteoKeys.latitudeParam: '${point.latitude}',
+        OpenMeteoKeys.longitudeParam: '${point.longitude}',
         OpenMeteoKeys.currentParam: OpenMeteoKeys.currentFields.join(','),
         OpenMeteoKeys.timezoneParam: OpenMeteoKeys.timezoneAuto,
       },
