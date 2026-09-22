@@ -58,6 +58,8 @@ abstract final class AppStrings {
   static const weatherTitle = 'Weather Status';
   static const weatherSubtitle = 'External weather forecast';
   static const partlyCloudy = 'Partly Cloudy';
+  static const raining = 'Raining';
+  static const noRain = 'No Rain';
   static const rainForecast = 'Rain Forecast';
   static const windSpeed = 'Wind Speed';
   static const humidity = 'Humidity';

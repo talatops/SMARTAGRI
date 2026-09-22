@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
 import '../../data/datasource/dashboard_data_source.dart';
+import '../../data/datasource/dashboard_firebase_data_source.dart';
 import '../../data/datasource/dashboard_mock_data_source.dart';
 import '../../data/repository/dashboard_repository_impl.dart';
 import '../../domain/repositories/dashboard_repository.dart';
@@ -12,7 +14,12 @@ import '../controller/dashboard_controller.dart';
 class DashboardBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DashboardDataSource>(() => DashboardMockDataSource());
+    Get.lazyPut<DashboardDataSource>(
+      () => DashboardFirebaseDataSource(
+        database: FirebaseDatabase.instance,
+        fallback: DashboardMockDataSource(),
+      ),
+    );
     Get.lazyPut<DashboardRepository>(() => DashboardRepositoryImpl(dataSource: Get.find()));
     Get.lazyPut(() => GetDashboardSnapshotUseCase(repository: Get.find()));
     Get.lazyPut(() => SetPumpModeUseCase(repository: Get.find()));
