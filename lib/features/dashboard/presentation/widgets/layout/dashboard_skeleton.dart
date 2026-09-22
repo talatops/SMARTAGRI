@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/extensions/responsive_extension.dart';
-import '../../../../core/extensions/responsive_size_extension.dart';
-import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_dimensions.dart';
-import '../../../../core/widgets/constants.dart';
-import '../../../../core/widgets/shimmer.dart';
+import '../../../../../core/extensions/responsive_extension.dart';
+import '../../../../../core/extensions/responsive_size_extension.dart';
+import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/app_dimensions.dart';
+import '../../../../../core/widgets/constants.dart';
+import '../../../../../core/widgets/shimmer.dart';
 import 'dashboard_grid.dart';
 
 class DashboardSkeleton extends StatelessWidget {

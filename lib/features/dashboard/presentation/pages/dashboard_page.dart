@@ -7,16 +7,16 @@ import '../../../../core/widgets/base_scaffold.dart';
 import '../../../../core/widgets/constants.dart';
 import '../../../../core/widgets/max_width_container.dart';
 import '../controller/dashboard_controller.dart';
-import '../widgets/composite_moisture_panel.dart';
-import '../widgets/crop_profile_panel.dart';
-import '../widgets/dashboard_footer.dart';
-import '../widgets/dashboard_grid.dart';
-import '../widgets/dashboard_header.dart';
-import '../widgets/dashboard_skeleton.dart';
-import '../widgets/field_telemetry_panel.dart';
-import '../widgets/irrigation_control_panel.dart';
-import '../widgets/soil_metrics_panel.dart';
-import '../widgets/weather_status_panel.dart';
+import '../widgets/composite/composite_moisture_panel.dart';
+import '../widgets/crop/crop_profile_panel.dart';
+import '../widgets/layout/dashboard_footer.dart';
+import '../widgets/layout/dashboard_grid.dart';
+import '../widgets/layout/dashboard_header.dart';
+import '../widgets/layout/dashboard_skeleton.dart';
+import '../widgets/irrigation/irrigation_control_panel.dart';
+import '../widgets/soil/soil_metrics_panel.dart';
+import '../widgets/telemetry/field_telemetry_panel.dart';
+import '../widgets/weather/weather_status_panel.dart';
 
 class DashboardPage extends GetView<DashboardController> {
   const DashboardPage({super.key});

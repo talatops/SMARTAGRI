@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/extensions/responsive_extension.dart';
-import '../../../../core/extensions/responsive_size_extension.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/app_assets.dart';
-import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_dimensions.dart';
-import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/formatters.dart';
-import '../../../../core/widgets/app_card.dart';
-import '../../../../core/widgets/circular_gauge.dart';
-import '../../../../core/widgets/constants.dart';
-import '../../../../core/widgets/custom_text.dart';
-import '../../../../core/widgets/status_pill.dart';
-import '../controller/dashboard_controller.dart';
+import '../../../../../core/extensions/responsive_extension.dart';
+import '../../../../../core/extensions/responsive_size_extension.dart';
+import '../../../../../core/theme/app_text_styles.dart';
+import '../../../../../core/utils/app_assets.dart';
+import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/app_dimensions.dart';
+import '../../../../../core/utils/app_strings.dart';
+import '../../../../../core/utils/formatters.dart';
+import '../../../../../core/widgets/app_card.dart';
+import '../../../../../core/widgets/circular_gauge.dart';
+import '../../../../../core/widgets/constants.dart';
+import '../../../../../core/widgets/custom_text.dart';
+import '../../../../../core/widgets/status_pill.dart';
+import '../../controller/dashboard_controller.dart';
 import 'wave_background.dart';
 
 class CompositeMoisturePanel extends StatelessWidget {
