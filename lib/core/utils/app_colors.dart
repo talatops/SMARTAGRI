@@ -51,4 +51,15 @@ abstract final class AppColors {
   static const loaderLogoGlow = Color(0x732ECC71);
 
   static const loaderBarGradient = LinearGradient(colors: [primaryBlue, cyan, success]);
+
+  static const shimmerBase = Color(0xFF15273E);
+  static const shimmerHighlight = Color(0xFF24405F);
+
+  static LinearGradient shimmerGradient(GradientTransform transform) => LinearGradient(
+    begin: const Alignment(-1, -0.3),
+    end: const Alignment(1, 0.3),
+    colors: const [shimmerBase, shimmerBase, shimmerHighlight, shimmerBase, shimmerBase],
+    stops: const [0, 0.35, 0.5, 0.65, 1],
+    transform: transform,
+  );
 }

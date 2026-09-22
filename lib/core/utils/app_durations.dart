@@ -14,4 +14,6 @@ abstract final class AppDurations {
 
   static const loaderSpin = Duration(milliseconds: 1100);
   static const loaderSlide = Duration(milliseconds: 1500);
+
+  static const shimmer = Duration(milliseconds: 1500);
 }

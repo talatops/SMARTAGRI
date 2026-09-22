@@ -69,5 +69,32 @@ abstract final class AppDimensions {
   static const double loaderTaglineMax = 13;
   static const double loaderTaglineViewportFraction = 0.03;
 
+  static const double shimmerRadius = 6;
+  static const double shimmerSweepStart = -0.5;
+  static const double shimmerSweepEnd = 1.5;
+  static const double shimmerRestValue = 0;
+
+  static const double skeletonLogoSize = 32;
+  static const double skeletonBrandWidth = 240;
+  static const double skeletonBrandHeight = 22;
+  static const double skeletonMetaWidth = 300;
+  static const double skeletonMetaHeight = 16;
+  static const double skeletonTitleHeight = 14;
+  static const double skeletonSubtitleHeight = 10;
+  static const double skeletonLineHeight = 12;
+  static const double skeletonValueHeight = 26;
+  static const double skeletonPillHeight = 22;
+  static const double skeletonFooterWidth = 180;
+  static const double skeletonFooterHeight = 12;
+  static const double skeletonTelemetryTileMobile = 132;
+  static const double skeletonGaugeBodyMobile = 260;
+  static const double skeletonWeatherBodyMobile = 200;
+  static const double skeletonCropBodyMobile = 220;
+  static const int skeletonCropRows = 5;
+  static const double skeletonShortFactor = 0.4;
+  static const double skeletonMediumFactor = 0.6;
+  static const double skeletonLongFactor = 0.8;
+  static const double skeletonIconFactor = 0.72;
+
   static const double designWidth = maxContentWidth;
 }
