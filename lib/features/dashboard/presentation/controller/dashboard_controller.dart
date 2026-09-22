@@ -7,8 +7,11 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_durations.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/enums.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../domain/entities/crop_profile.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
+import '../../domain/entities/weather_snapshot.dart';
+import '../../domain/use_cases/get_current_weather_use_case.dart';
 import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
 import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
@@ -21,6 +24,7 @@ class DashboardController extends GetxController {
   final SetPumpModeUseCase setPumpModeUseCase;
   final TogglePumpUseCase togglePumpUseCase;
   final SelectCropUseCase selectCropUseCase;
+  final GetCurrentWeatherUseCase getCurrentWeatherUseCase;
 
   final DateTime Function() clock;
 
@@ -30,6 +34,7 @@ class DashboardController extends GetxController {
     required this.setPumpModeUseCase,
     required this.togglePumpUseCase,
     required this.selectCropUseCase,
+    required this.getCurrentWeatherUseCase,
     DateTime Function()? clock,
   }) : clock = clock ?? DateTime.now;
 
@@ -42,8 +47,11 @@ class DashboardController extends GetxController {
   final RxBool isPumpOn = false.obs;
   late final Rx<DateTime> now = clock().obs;
   final Rxn<DateTime> lastUpdated = Rxn<DateTime>();
+  final Rxn<WeatherSnapshot> weather = Rxn<WeatherSnapshot>();
+  final RxBool isWeatherLoading = true.obs;
 
   Timer? _clock;
+  Timer? _weatherTimer;
   StreamSubscription<DashboardSnapshot>? _subscription;
 
   @override
@@ -51,12 +59,16 @@ class DashboardController extends GetxController {
     super.onInit();
     _clock = Timer.periodic(AppDurations.clockTick, (_) => now.value = clock());
     watchDashboard();
+    loadWeather();
+    _weatherTimer = Timer.periodic(AppDurations.weatherRefresh, (_) => loadWeather());
   }
 
   @override
   void onClose() {
     _clock?.cancel();
     _clock = null;
+    _weatherTimer?.cancel();
+    _weatherTimer = null;
     _subscription?.cancel();
     _subscription = null;
     super.onClose();
@@ -99,9 +111,47 @@ class DashboardController extends GetxController {
 
   String get pumpButtonLabel => isPumpCommandOn.value ? AppStrings.pumpOn : AppStrings.pumpOff;
 
+  bool get showWeatherPlaceholder => weather.value == null && isWeatherLoading.value;
+
+  String get weatherTemperatureLabel {
+    final current = weather.value;
+    return current == null ? AppStrings.noValue : Formatters.temperature(current.temperatureC);
+  }
+
+  String get weatherConditionLabel => weather.value?.condition ?? AppStrings.weatherUnavailable;
+
+  String get weatherRainChanceLabel {
+    final current = weather.value;
+    return current == null
+        ? AppStrings.noValue
+        : Formatters.percent(current.rainChancePercent, decimals: 0);
+  }
+
+  String get weatherWindLabel {
+    final current = weather.value;
+    return current == null ? AppStrings.noValue : Formatters.speed(current.windKmh, decimals: 0);
+  }
+
+  String get weatherHumidityLabel {
+    final current = weather.value;
+    return current == null
+        ? AppStrings.noValue
+        : Formatters.percent(current.humidityPercent, decimals: 0);
+  }
+
+  Future<void> loadWeather() async {
+    isWeatherLoading.value = true;
+    final result = await getCurrentWeatherUseCase()
+        .then<WeatherSnapshot?>((value) => value)
+        .catchError((Object _) => weather.value);
+    weather.value = result;
+    isWeatherLoading.value = false;
+  }
+
   Future<void> loadDashboard({bool isRefresh = false}) async {
     if (isRefresh) {
       isRefreshing.value = true;
+      loadWeather();
     } else {
       isLoading.value = true;
     }

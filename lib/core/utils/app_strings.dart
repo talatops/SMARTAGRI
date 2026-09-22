@@ -63,6 +63,18 @@ abstract final class AppStrings {
   static const rainForecast = 'Rain Forecast';
   static const windSpeed = 'Wind Speed';
   static const humidity = 'Humidity';
+  static const clearSky = 'Clear Sky';
+  static const mainlyClear = 'Mainly Clear';
+  static const overcast = 'Overcast';
+  static const fog = 'Fog';
+  static const drizzle = 'Drizzle';
+  static const snow = 'Snow';
+  static const rainShowers = 'Rain Showers';
+  static const snowShowers = 'Snow Showers';
+  static const thunderstorm = 'Thunderstorm';
+  static const unknownCondition = 'Unknown';
+  static const weatherUnavailable = 'Weather unavailable';
+  static const noValue = '--';
 
   static const cropTitle = 'Crop Profile';
   static const cropSubtitle = 'Tap a crop to set it active';

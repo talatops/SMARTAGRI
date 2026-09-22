@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/extensions/responsive_size_extension.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/app_dimensions.dart';
-import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/formatters.dart';
-import '../../../../core/widgets/circular_gauge.dart';
-import '../../../../core/widgets/constants.dart';
-import '../../../../core/widgets/custom_text.dart';
-import '../../../../core/widgets/metric_tile.dart';
-import '../../domain/entities/soil_reading.dart';
+import '../../../../../core/extensions/responsive_size_extension.dart';
+import '../../../../../core/theme/app_text_styles.dart';
+import '../../../../../core/utils/app_dimensions.dart';
+import '../../../../../core/utils/app_strings.dart';
+import '../../../../../core/utils/formatters.dart';
+import '../../../../../core/widgets/circular_gauge.dart';
+import '../../../../../core/widgets/constants.dart';
+import '../../../../../core/widgets/custom_text.dart';
+import '../../../../../core/widgets/metric_tile.dart';
+import '../../../domain/entities/soil_reading.dart';
 
 class SoilZoneTile extends StatelessWidget {
   final SoilReading reading;

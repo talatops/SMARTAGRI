@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/extensions/responsive_extension.dart';
-import '../../../../core/utils/app_dimensions.dart';
+import '../../../../../core/extensions/responsive_extension.dart';
+import '../../../../../core/utils/app_dimensions.dart';
 
 class DashboardGrid extends StatelessWidget {
   final Widget soilPanel;
