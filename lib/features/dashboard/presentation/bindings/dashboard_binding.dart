@@ -7,8 +7,10 @@ import '../../data/datasource/dashboard_mock_data_source.dart';
 import '../../data/repository/dashboard_repository_impl.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
+import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
 import '../../domain/use_cases/toggle_pump_use_case.dart';
+import '../../domain/use_cases/watch_dashboard_snapshot_use_case.dart';
 import '../controller/dashboard_controller.dart';
 
 class DashboardBinding extends Bindings {
@@ -22,13 +24,17 @@ class DashboardBinding extends Bindings {
     );
     Get.lazyPut<DashboardRepository>(() => DashboardRepositoryImpl(dataSource: Get.find()));
     Get.lazyPut(() => GetDashboardSnapshotUseCase(repository: Get.find()));
+    Get.lazyPut(() => WatchDashboardSnapshotUseCase(repository: Get.find()));
     Get.lazyPut(() => SetPumpModeUseCase(repository: Get.find()));
     Get.lazyPut(() => TogglePumpUseCase(repository: Get.find()));
+    Get.lazyPut(() => SelectCropUseCase(repository: Get.find()));
     Get.lazyPut(
       () => DashboardController(
         getDashboardSnapshotUseCase: Get.find(),
+        watchDashboardSnapshotUseCase: Get.find(),
         setPumpModeUseCase: Get.find(),
         togglePumpUseCase: Get.find(),
+        selectCropUseCase: Get.find(),
       ),
     );
   }

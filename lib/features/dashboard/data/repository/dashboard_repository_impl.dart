@@ -1,6 +1,5 @@
 import '../../../../core/utils/enums.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
-import '../../domain/entities/irrigation_state.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../datasource/dashboard_data_source.dart';
 
@@ -13,8 +12,14 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future<DashboardSnapshot> getDashboardSnapshot() => dataSource.fetchSnapshot();
 
   @override
-  Future<IrrigationState> setPumpMode(PumpMode mode) => dataSource.setPumpMode(mode);
+  Stream<DashboardSnapshot> watchDashboardSnapshot() => dataSource.watchSnapshot();
 
   @override
-  Future<IrrigationState> togglePump({required bool isOn}) => dataSource.togglePump(isOn: isOn);
+  Future<void> setPumpMode(PumpMode mode) => dataSource.setPumpMode(mode);
+
+  @override
+  Future<void> togglePump({required bool isOn}) => dataSource.togglePump(isOn: isOn);
+
+  @override
+  Future<void> selectCrop(CropType crop) => dataSource.selectCrop(crop);
 }

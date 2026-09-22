@@ -1,11 +1,14 @@
 import '../../../../core/utils/enums.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
-import '../../domain/entities/irrigation_state.dart';
 
 abstract class DashboardDataSource {
   Future<DashboardSnapshot> fetchSnapshot();
 
-  Future<IrrigationState> setPumpMode(PumpMode mode);
+  Stream<DashboardSnapshot> watchSnapshot();
 
-  Future<IrrigationState> togglePump({required bool isOn});
+  Future<void> setPumpMode(PumpMode mode);
+
+  Future<void> togglePump({required bool isOn});
+
+  Future<void> selectCrop(CropType crop);
 }

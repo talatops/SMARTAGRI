@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_durations.dart';
@@ -20,6 +22,8 @@ class DashboardMockDataSource implements DashboardDataSource {
     : clock = clock ?? DateTime.now;
 
   IrrigationState _irrigation = const IrrigationState(mode: PumpMode.auto, isPumpOn: false);
+  CropType _selectedCrop = CropType.wheat;
+  final StreamController<void> _changes = StreamController<void>.broadcast();
 
   static const crops = <CropProfile>[
     CropProfile(
@@ -85,7 +89,7 @@ class DashboardMockDataSource implements DashboardDataSource {
         humidityPercent: 58,
       ),
       crops: crops,
-      selectedCrop: crops.first,
+      selectedCrop: crops.firstWhere((crop) => crop.type == _selectedCrop),
       irrigation: _irrigation,
       lastUpdated: clock(),
       location: AppStrings.location,
@@ -93,17 +97,31 @@ class DashboardMockDataSource implements DashboardDataSource {
   }
 
   @override
-  Future<IrrigationState> setPumpMode(PumpMode mode) async {
+  Stream<DashboardSnapshot> watchSnapshot() async* {
+    yield await fetchSnapshot();
+    await for (final _ in _changes.stream) {
+      yield await fetchSnapshot();
+    }
+  }
+
+  @override
+  Future<void> setPumpMode(PumpMode mode) async {
     _irrigation = _irrigation.copyWith(
       mode: mode,
       isPumpOn: mode.isAuto ? false : _irrigation.isPumpOn,
     );
-    return _irrigation;
+    _changes.add(null);
   }
 
   @override
-  Future<IrrigationState> togglePump({required bool isOn}) async {
+  Future<void> togglePump({required bool isOn}) async {
     _irrigation = _irrigation.copyWith(isPumpOn: isOn);
-    return _irrigation;
+    _changes.add(null);
+  }
+
+  @override
+  Future<void> selectCrop(CropType crop) async {
+    _selectedCrop = crop;
+    _changes.add(null);
   }
 }

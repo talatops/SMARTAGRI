@@ -16,17 +16,44 @@ import 'dashboard_firebase_keys.dart';
 class DashboardFirebaseDataSource implements DashboardDataSource {
   final FirebaseDatabase database;
   final DashboardDataSource fallback;
+  final DateTime Function() clock;
 
-  DashboardFirebaseDataSource({required this.database, required this.fallback});
+  DashboardFirebaseDataSource({
+    required this.database,
+    required this.fallback,
+    DateTime Function()? clock,
+  }) : clock = clock ?? DateTime.now;
+
+  DatabaseReference get _device => database.ref(DashboardFirebaseKeys.devicePath);
+
+  DatabaseReference get _control => _device.child(DashboardFirebaseKeys.control);
 
   @override
   Future<DashboardSnapshot> fetchSnapshot() async {
-    final results = await Future.wait<Object?>([
-      fallback.fetchSnapshot(),
-      database.ref(DashboardFirebaseKeys.devicePath).get(),
-    ]);
-    final base = results[0]! as DashboardSnapshot;
-    final device = _map((results[1]! as DataSnapshot).value);
+    final results = await Future.wait<Object?>([fallback.fetchSnapshot(), _device.get()]);
+    return _merge(results[0]! as DashboardSnapshot, (results[1]! as DataSnapshot).value);
+  }
+
+  @override
+  Stream<DashboardSnapshot> watchSnapshot() async* {
+    final base = await fallback.fetchSnapshot();
+    yield* _device.onValue.map((event) => _merge(base, event.snapshot.value));
+  }
+
+  @override
+  Future<void> setPumpMode(PumpMode mode) =>
+      _control.child(DashboardFirebaseKeys.mode).set(mode.label);
+
+  @override
+  Future<void> togglePump({required bool isOn}) =>
+      _control.child(DashboardFirebaseKeys.pumpCommand).set(isOn);
+
+  @override
+  Future<void> selectCrop(CropType crop) =>
+      _control.child(DashboardFirebaseKeys.cropProfile).set(crop.label);
+
+  DashboardSnapshot _merge(DashboardSnapshot base, Object? value) {
+    final device = _map(value);
     final control = _map(device[DashboardFirebaseKeys.control]);
     final sensors = _map(device[DashboardFirebaseKeys.sensors]);
     final weather = _map(device[DashboardFirebaseKeys.weather]);
@@ -85,16 +112,10 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
         mode: _pumpMode(control[DashboardFirebaseKeys.mode]) ?? base.irrigation.mode,
         isPumpOn: _bool(control[DashboardFirebaseKeys.pumpStatus]) ?? base.irrigation.isPumpOn,
       ),
-      lastUpdated: base.lastUpdated,
+      lastUpdated: clock(),
       location: base.location,
     );
   }
-
-  @override
-  Future<IrrigationState> setPumpMode(PumpMode mode) => fallback.setPumpMode(mode);
-
-  @override
-  Future<IrrigationState> togglePump({required bool isOn}) => fallback.togglePump(isOn: isOn);
 
   Map<Object?, Object?> _map(Object? value) =>
       value is Map<Object?, Object?> ? value : const <Object?, Object?>{};

@@ -4,6 +4,7 @@ abstract final class DashboardFirebaseKeys {
   static const control = 'control';
   static const cropProfile = 'crop_profile';
   static const mode = 'mode';
+  static const pumpCommand = 'pump_command';
   static const pumpStatus = 'pump_status';
 
   static const sensors = 'sensors';

@@ -1,4 +1,3 @@
-import '../entities/irrigation_state.dart';
 import '../repositories/dashboard_repository.dart';
 
 class TogglePumpUseCase {
@@ -6,5 +5,5 @@ class TogglePumpUseCase {
 
   TogglePumpUseCase({required this.repository});
 
-  Future<IrrigationState> call({required bool isOn}) => repository.togglePump(isOn: isOn);
+  Future<void> call({required bool isOn}) => repository.togglePump(isOn: isOn);
 }
