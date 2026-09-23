@@ -130,4 +130,7 @@ class DashboardMockDataSource implements DashboardDataSource {
     _selectedCrop = crop;
     _changes.add(null);
   }
+
+  @override
+  Future<void> saveWeather(WeatherSnapshot weather) async {}
 }

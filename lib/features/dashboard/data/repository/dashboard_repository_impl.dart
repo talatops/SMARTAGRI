@@ -1,5 +1,6 @@
 import '../../../../core/utils/enums.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
+import '../../domain/entities/weather_snapshot.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../datasource/dashboard_data_source.dart';
 
@@ -22,4 +23,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   @override
   Future<void> selectCrop(CropType crop) => dataSource.selectCrop(crop);
+
+  @override
+  Future<void> saveWeather(WeatherSnapshot weather) => dataSource.saveWeather(weather);
 }

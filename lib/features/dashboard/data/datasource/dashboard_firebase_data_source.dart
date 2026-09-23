@@ -51,6 +51,15 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
   Future<void> selectCrop(CropType crop) =>
       _control.child(DashboardFirebaseKeys.cropProfile).set(crop.label);
 
+  @override
+  Future<void> saveWeather(WeatherSnapshot weather) =>
+      _device.child(DashboardFirebaseKeys.weather).update({
+        DashboardFirebaseKeys.weatherTemperature: weather.temperatureC,
+        DashboardFirebaseKeys.weatherHumidity: weather.humidityPercent,
+        DashboardFirebaseKeys.rainProbability: weather.rainChancePercent,
+        DashboardFirebaseKeys.isRaining: weather.condition.isRaining,
+      });
+
   DashboardSnapshot _merge(DashboardSnapshot base, Object? value) {
     final device = _map(value);
     final control = _map(device[DashboardFirebaseKeys.control]);

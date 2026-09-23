@@ -20,6 +20,7 @@ import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
 import '../../domain/use_cases/get_device_location_use_case.dart';
 import '../../domain/use_cases/get_place_name_use_case.dart';
 import '../../domain/use_cases/open_location_settings_use_case.dart';
+import '../../domain/use_cases/save_weather_use_case.dart';
 import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
 import '../../domain/use_cases/toggle_pump_use_case.dart';
@@ -35,6 +36,7 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
   final GetDeviceLocationUseCase getDeviceLocationUseCase;
   final GetPlaceNameUseCase getPlaceNameUseCase;
   final OpenLocationSettingsUseCase openLocationSettingsUseCase;
+  final SaveWeatherUseCase saveWeatherUseCase;
 
   final DateTime Function() clock;
 
@@ -48,6 +50,7 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
     required this.getDeviceLocationUseCase,
     required this.getPlaceNameUseCase,
     required this.openLocationSettingsUseCase,
+    required this.saveWeatherUseCase,
     DateTime Function()? clock,
   }) : clock = clock ?? DateTime.now;
 
@@ -249,9 +252,13 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
     final point = coordinates.value;
     if (point == null) return;
     isWeatherLoading.value = true;
-    weather.value = await getCurrentWeatherUseCase(point)
+    final result = await getCurrentWeatherUseCase(point)
         .then<WeatherSnapshot?>((value) => value)
-        .catchError((Object _) => weather.value);
+        .catchError((Object _) => null);
+    if (result != null) {
+      weather.value = result;
+      saveWeatherUseCase(result).catchError((Object _) {});
+    }
     isWeatherLoading.value = false;
   }
 
