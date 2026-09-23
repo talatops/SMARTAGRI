@@ -8,6 +8,7 @@ import '../../../../../core/utils/app_assets.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_dimensions.dart';
 import '../../../../../core/utils/app_strings.dart';
+import '../../../../../core/widgets/app_action_button.dart';
 import '../../../../../core/widgets/app_card.dart';
 import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
@@ -34,6 +35,9 @@ class WeatherStatusPanel extends StatelessWidget {
       iconColor: AppColors.cyan,
       child: Obx(() {
         final placeholder = controller.showWeatherPlaceholder;
+        if (!placeholder && controller.weatherLocationIssue != null) {
+          return _LocationPrompt(controller: controller);
+        }
         final valuePlaceholder = placeholder
             ? ShimmerBox(
                 width: AppDimensions.skeletonWeatherValueWidth.w,
@@ -88,6 +92,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     ),
                   ),
                   WeatherIllustration(
+                    icon: controller.weatherIcon,
                     size: context.adaptive<double>(mobile: 78, tablet: 80, desktop: 96),
                   ),
                 ],
@@ -137,6 +142,44 @@ class WeatherStatusPanel extends StatelessWidget {
 
         return placeholder ? Shimmer(child: content) : content;
       }),
+    );
+  }
+}
+
+class _LocationPrompt extends StatelessWidget {
+  final DashboardController controller;
+
+  const _LocationPrompt({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: AppDimensions.s16.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              AppAssets.locationOff,
+              size: AppDimensions.locationPromptIcon.r,
+              color: AppColors.textTertiary,
+            ),
+            HeightBox(height: AppDimensions.s12.h),
+            CustomText(
+              text: controller.locationIssueMessage,
+              style: AppTextStyles.bodyText,
+              textAlign: TextAlign.center,
+              maxLines: 3,
+            ),
+            HeightBox(height: AppDimensions.s16.h),
+            AppActionButton(
+              label: controller.locationActionLabel,
+              icon: AppAssets.locationPin,
+              onTap: controller.resolveLocationIssue,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

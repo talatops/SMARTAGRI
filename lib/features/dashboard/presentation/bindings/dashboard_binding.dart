@@ -20,6 +20,7 @@ import '../../domain/use_cases/get_current_weather_use_case.dart';
 import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
 import '../../domain/use_cases/get_device_location_use_case.dart';
 import '../../domain/use_cases/get_place_name_use_case.dart';
+import '../../domain/use_cases/open_location_settings_use_case.dart';
 import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
 import '../../domain/use_cases/toggle_pump_use_case.dart';
@@ -50,6 +51,7 @@ class DashboardBinding extends Bindings {
     Get.lazyPut(() => GetCurrentWeatherUseCase(repository: Get.find()));
     Get.lazyPut(() => GetDeviceLocationUseCase(repository: Get.find()));
     Get.lazyPut(() => GetPlaceNameUseCase(repository: Get.find()));
+    Get.lazyPut(() => OpenLocationSettingsUseCase(repository: Get.find()));
     Get.lazyPut(() => GetDashboardSnapshotUseCase(repository: Get.find()));
     Get.lazyPut(() => WatchDashboardSnapshotUseCase(repository: Get.find()));
     Get.lazyPut(() => SetPumpModeUseCase(repository: Get.find()));
@@ -65,6 +67,7 @@ class DashboardBinding extends Bindings {
         getCurrentWeatherUseCase: Get.find(),
         getDeviceLocationUseCase: Get.find(),
         getPlaceNameUseCase: Get.find(),
+        openLocationSettingsUseCase: Get.find(),
       ),
     );
   }

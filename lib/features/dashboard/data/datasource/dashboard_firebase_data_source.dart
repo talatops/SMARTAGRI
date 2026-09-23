@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 
-import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/enums.dart';
 import '../../domain/entities/composite_moisture.dart';
 import '../../domain/entities/crop_profile.dart';
@@ -96,10 +95,11 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
         temperatureC:
             _double(weather[DashboardFirebaseKeys.weatherTemperature]) ?? base.weather.temperatureC,
         condition: switch (isRaining) {
-          true => AppStrings.raining,
-          false => AppStrings.noRain,
+          true => WeatherCondition.rain,
+          false => WeatherCondition.clearSky,
           _ => base.weather.condition,
         },
+        isDay: base.weather.isDay,
         rainChancePercent:
             _double(weather[DashboardFirebaseKeys.rainProbability]) ?? base.weather.rainChancePercent,
         windKmh: base.weather.windKmh,

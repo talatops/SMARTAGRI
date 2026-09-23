@@ -37,14 +37,14 @@ abstract final class AppTextStyles {
   );
 
   static const metricValueXL = TextStyle(
-    fontSize: 40,
+    fontSize: 32,
     fontWeight: AppFonts.bold,
     color: AppColors.textPrimary,
     letterSpacing: -1,
   );
 
   static const metricValueL = TextStyle(
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: AppFonts.bold,
     color: AppColors.textPrimary,
     letterSpacing: -0.5,
@@ -57,7 +57,7 @@ abstract final class AppTextStyles {
   );
 
   static const gaugeValueXL = TextStyle(
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: AppFonts.bold,
     color: AppColors.textPrimary,
     letterSpacing: -1,

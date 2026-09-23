@@ -1,3 +1,4 @@
+import 'app_assets.dart';
 import 'app_strings.dart';
 
 enum MetricStatus {
@@ -41,4 +42,80 @@ enum CropType {
 
   final String label;
   const CropType(this.label);
+}
+
+enum LocationIssue {
+  permissionDenied(AppStrings.locationPermissionDenied),
+  permissionBlocked(AppStrings.locationPermissionBlocked),
+  serviceDisabled(AppStrings.locationServiceDisabled),
+  unavailable(AppStrings.locationFetchFailed);
+
+  final String message;
+  const LocationIssue(this.message);
+
+  bool get isPermissionDenied => this == LocationIssue.permissionDenied;
+  bool get isPermissionBlocked => this == LocationIssue.permissionBlocked;
+  bool get isServiceDisabled => this == LocationIssue.serviceDisabled;
+  bool get isUnavailable => this == LocationIssue.unavailable;
+}
+
+enum WeatherCondition {
+  clearSky(AppStrings.clearSky, AppAssets.weatherClearDay, AppAssets.weatherClearNight),
+  mainlyClear(
+    AppStrings.mainlyClear,
+    AppAssets.weatherPartlyCloudyDay,
+    AppAssets.weatherPartlyCloudyNight,
+  ),
+  partlyCloudy(
+    AppStrings.partlyCloudy,
+    AppAssets.weatherPartlyCloudyDay,
+    AppAssets.weatherPartlyCloudyNight,
+  ),
+  overcast(AppStrings.overcast, AppAssets.weatherOvercastDay, AppAssets.weatherOvercastNight),
+  fog(AppStrings.fog, AppAssets.weatherFogDay, AppAssets.weatherFogNight),
+  drizzle(AppStrings.drizzle, AppAssets.weatherDrizzle, AppAssets.weatherDrizzle),
+  freezingDrizzle(AppStrings.freezingDrizzle, AppAssets.weatherSleet, AppAssets.weatherSleet),
+  rain(AppStrings.raining, AppAssets.weatherRain, AppAssets.weatherRain),
+  heavyRain(AppStrings.heavyRain, AppAssets.weatherExtremeRain, AppAssets.weatherExtremeRain),
+  freezingRain(AppStrings.freezingRain, AppAssets.weatherSleet, AppAssets.weatherSleet),
+  snow(AppStrings.snow, AppAssets.weatherSnow, AppAssets.weatherSnow),
+  heavySnow(AppStrings.heavySnow, AppAssets.weatherExtremeSnow, AppAssets.weatherExtremeSnow),
+  snowGrains(AppStrings.snowGrains, AppAssets.weatherSnow, AppAssets.weatherSnow),
+  rainShowers(
+    AppStrings.rainShowers,
+    AppAssets.weatherRainShowersDay,
+    AppAssets.weatherRainShowersNight,
+  ),
+  heavyRainShowers(
+    AppStrings.heavyRainShowers,
+    AppAssets.weatherExtremeRain,
+    AppAssets.weatherExtremeRain,
+  ),
+  snowShowers(
+    AppStrings.snowShowers,
+    AppAssets.weatherSnowShowersDay,
+    AppAssets.weatherSnowShowersNight,
+  ),
+  thunderstorm(
+    AppStrings.thunderstorm,
+    AppAssets.weatherThunderstormDay,
+    AppAssets.weatherThunderstormNight,
+  ),
+  thunderstormHail(
+    AppStrings.thunderstormHail,
+    AppAssets.weatherThunderstormExtreme,
+    AppAssets.weatherThunderstormExtreme,
+  ),
+  unknown(
+    AppStrings.unknownCondition,
+    AppAssets.weatherNotAvailable,
+    AppAssets.weatherNotAvailable,
+  );
+
+  final String label;
+  final String dayIcon;
+  final String nightIcon;
+  const WeatherCondition(this.label, this.dayIcon, this.nightIcon);
+
+  String iconFor({required bool isDay}) => isDay ? dayIcon : nightIcon;
 }

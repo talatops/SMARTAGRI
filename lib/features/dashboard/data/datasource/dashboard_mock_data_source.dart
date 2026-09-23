@@ -87,7 +87,8 @@ class DashboardMockDataSource implements DashboardDataSource {
       ),
       weather: const WeatherSnapshot(
         temperatureC: 22.6,
-        condition: AppStrings.partlyCloudy,
+        condition: WeatherCondition.partlyCloudy,
+        isDay: true,
         rainChancePercent: 15,
         windKmh: 12,
         humidityPercent: 58,

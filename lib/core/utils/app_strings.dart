@@ -72,10 +72,28 @@ abstract final class AppStrings {
   static const rainShowers = 'Rain Showers';
   static const snowShowers = 'Snow Showers';
   static const thunderstorm = 'Thunderstorm';
+  static const thunderstormHail = 'Thunderstorm with Hail';
+  static const freezingDrizzle = 'Freezing Drizzle';
+  static const heavyRain = 'Heavy Rain';
+  static const freezingRain = 'Freezing Rain';
+  static const heavySnow = 'Heavy Snow';
+  static const snowGrains = 'Snow Grains';
+  static const heavyRainShowers = 'Heavy Rain Showers';
   static const unknownCondition = 'Unknown';
   static const weatherUnavailable = 'Weather unavailable';
   static const locationUnavailable = 'Location unavailable';
   static const locationSeparator = ', ';
+  static const locationPermissionDenied = 'Allow location access to see the weather for your field.';
+  static const locationPermissionBlocked =
+      'Location access is blocked. Enable it in settings to see the weather for your field.';
+  static const locationPermissionBlockedWeb =
+      'Location access is blocked. Click the site icon in the address bar, allow Location, then try again.';
+  static const locationServiceDisabled =
+      'Location services are turned off. Turn them on to see the weather for your field.';
+  static const locationFetchFailed = 'Couldn\'t get your location. Please try again.';
+  static const allowLocation = 'Allow Location';
+  static const openSettings = 'Open Settings';
+  static const tryAgain = 'Try Again';
   static const noValue = '--';
 
   static const cropTitle = 'Crop Profile';

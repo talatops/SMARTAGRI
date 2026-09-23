@@ -73,8 +73,6 @@ class _Gauge extends StatelessWidget {
         strokeWidth: AppDimensions.compositeGaugeStroke.r,
         startAngle: 100,
         sweepAngle: 340,
-        showTrack: false,
-        fullRing: true,
         gradientColors: AppColors.compositeGaugeColors,
         gradientStops: const [0.0, 0.35, 0.58, 1.0],
         center: Column(
