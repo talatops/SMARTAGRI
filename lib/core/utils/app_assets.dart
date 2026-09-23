@@ -5,6 +5,7 @@ abstract final class AppAssets {
   static const calendar = Icons.calendar_today_outlined;
   static const clock = Icons.access_time_rounded;
   static const locationPin = Icons.location_on_outlined;
+  static const locationOff = Icons.location_off_rounded;
   static const refresh = Icons.refresh_rounded;
 
   static const soilPanel = Icons.grass_rounded;

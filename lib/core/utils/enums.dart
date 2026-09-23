@@ -44,6 +44,21 @@ enum CropType {
   const CropType(this.label);
 }
 
+enum LocationIssue {
+  permissionDenied(AppStrings.locationPermissionDenied),
+  permissionBlocked(AppStrings.locationPermissionBlocked),
+  serviceDisabled(AppStrings.locationServiceDisabled),
+  unavailable(AppStrings.locationFetchFailed);
+
+  final String message;
+  const LocationIssue(this.message);
+
+  bool get isPermissionDenied => this == LocationIssue.permissionDenied;
+  bool get isPermissionBlocked => this == LocationIssue.permissionBlocked;
+  bool get isServiceDisabled => this == LocationIssue.serviceDisabled;
+  bool get isUnavailable => this == LocationIssue.unavailable;
+}
+
 enum WeatherCondition {
   clearSky(AppStrings.clearSky, AppAssets.weatherClearDay, AppAssets.weatherClearNight),
   mainlyClear(

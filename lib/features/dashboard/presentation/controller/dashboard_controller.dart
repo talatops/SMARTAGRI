@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,21 +10,22 @@ import '../../../../core/utils/app_durations.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/formatters.dart';
-import '../../data/datasource/field_location.dart';
 import '../../domain/entities/crop_profile.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
 import '../../domain/entities/geo_point.dart';
+import '../../domain/entities/location_exception.dart';
 import '../../domain/entities/weather_snapshot.dart';
 import '../../domain/use_cases/get_current_weather_use_case.dart';
 import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
 import '../../domain/use_cases/get_device_location_use_case.dart';
 import '../../domain/use_cases/get_place_name_use_case.dart';
+import '../../domain/use_cases/open_location_settings_use_case.dart';
 import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
 import '../../domain/use_cases/toggle_pump_use_case.dart';
 import '../../domain/use_cases/watch_dashboard_snapshot_use_case.dart';
 
-class DashboardController extends GetxController {
+class DashboardController extends GetxController with WidgetsBindingObserver {
   final GetDashboardSnapshotUseCase getDashboardSnapshotUseCase;
   final WatchDashboardSnapshotUseCase watchDashboardSnapshotUseCase;
   final SetPumpModeUseCase setPumpModeUseCase;
@@ -32,6 +34,7 @@ class DashboardController extends GetxController {
   final GetCurrentWeatherUseCase getCurrentWeatherUseCase;
   final GetDeviceLocationUseCase getDeviceLocationUseCase;
   final GetPlaceNameUseCase getPlaceNameUseCase;
+  final OpenLocationSettingsUseCase openLocationSettingsUseCase;
 
   final DateTime Function() clock;
 
@@ -44,6 +47,7 @@ class DashboardController extends GetxController {
     required this.getCurrentWeatherUseCase,
     required this.getDeviceLocationUseCase,
     required this.getPlaceNameUseCase,
+    required this.openLocationSettingsUseCase,
     DateTime Function()? clock,
   }) : clock = clock ?? DateTime.now;
 
@@ -57,18 +61,22 @@ class DashboardController extends GetxController {
   late final Rx<DateTime> now = clock().obs;
   final Rxn<DateTime> lastUpdated = Rxn<DateTime>();
   final Rxn<WeatherSnapshot> weather = Rxn<WeatherSnapshot>();
-  final RxBool isWeatherLoading = true.obs;
+  final RxBool isWeatherLoading = false.obs;
   final Rxn<GeoPoint> coordinates = Rxn<GeoPoint>();
   final Rxn<String> locationName = Rxn<String>();
   final RxBool isLocationLoading = true.obs;
+  final Rxn<LocationIssue> locationIssue = Rxn<LocationIssue>();
 
   Timer? _clock;
+  bool _isResolvingLocation = false;
+  bool _isAwaitingSettings = false;
   Timer? _weatherTimer;
   StreamSubscription<DashboardSnapshot>? _subscription;
 
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     _clock = Timer.periodic(AppDurations.clockTick, (_) => now.value = clock());
     watchDashboard();
     loadLocation();
@@ -77,6 +85,7 @@ class DashboardController extends GetxController {
 
   @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     _clock?.cancel();
     _clock = null;
     _weatherTimer?.cancel();
@@ -84,6 +93,13 @@ class DashboardController extends GetxController {
     _subscription?.cancel();
     _subscription = null;
     super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed || !_isAwaitingSettings) return;
+    _isAwaitingSettings = false;
+    loadLocation();
   }
 
   List<CropProfile> get crops => snapshot.value?.crops ?? const [];
@@ -123,7 +139,30 @@ class DashboardController extends GetxController {
 
   String get pumpButtonLabel => isPumpCommandOn.value ? AppStrings.pumpOn : AppStrings.pumpOff;
 
-  bool get showWeatherPlaceholder => weather.value == null && isWeatherLoading.value;
+  bool get showWeatherPlaceholder =>
+      weather.value == null && (isWeatherLoading.value || isLocationLoading.value);
+
+  LocationIssue? get weatherLocationIssue => coordinates.value == null ? locationIssue.value : null;
+
+  String get locationIssueMessage {
+    final issue = weatherLocationIssue;
+    if (kIsWeb && (issue?.isPermissionBlocked ?? false)) {
+      return AppStrings.locationPermissionBlockedWeb;
+    }
+    return issue?.message ?? AppStrings.locationFetchFailed;
+  }
+
+  bool get _canOpenLocationSettings {
+    final issue = weatherLocationIssue;
+    return !kIsWeb && issue != null && (issue.isPermissionBlocked || issue.isServiceDisabled);
+  }
+
+  String get locationActionLabel {
+    if (_canOpenLocationSettings) return AppStrings.openSettings;
+    return (weatherLocationIssue?.isPermissionDenied ?? false)
+        ? AppStrings.allowLocation
+        : AppStrings.tryAgain;
+  }
 
   String get weatherTemperatureLabel {
     final current = weather.value;
@@ -159,11 +198,41 @@ class DashboardController extends GetxController {
   String get locationLabel => locationName.value ?? AppStrings.locationUnavailable;
 
   Future<void> loadLocation() async {
+    if (_isResolvingLocation) return;
+    _isResolvingLocation = true;
     isLocationLoading.value = true;
-    coordinates.value = await getDeviceLocationUseCase()
-        .then<GeoPoint?>((value) => value)
-        .catchError((Object _) => FieldLocation.fallback);
+    try {
+      coordinates.value = await getDeviceLocationUseCase();
+      locationIssue.value = null;
+    } catch (error) {
+      final issue = error is LocationException ? error.issue : LocationIssue.unavailable;
+      locationIssue.value = issue;
+      if (!issue.isUnavailable) _clearLocation();
+    } finally {
+      _isResolvingLocation = false;
+    }
+
+    if (coordinates.value == null) {
+      isLocationLoading.value = false;
+      return;
+    }
     await Future.wait([loadPlaceName(), loadWeather()]);
+  }
+
+  Future<void> resolveLocationIssue() async {
+    final issue = weatherLocationIssue;
+    if (issue == null) return;
+    final openedSettings =
+        _canOpenLocationSettings &&
+        await openLocationSettingsUseCase(issue).catchError((Object _) => false);
+    _isAwaitingSettings = openedSettings;
+    if (!openedSettings) await loadLocation();
+  }
+
+  void _clearLocation() {
+    coordinates.value = null;
+    locationName.value = null;
+    weather.value = null;
   }
 
   Future<void> loadPlaceName() async {
@@ -177,7 +246,8 @@ class DashboardController extends GetxController {
   }
 
   Future<void> loadWeather() async {
-    final point = coordinates.value ?? FieldLocation.fallback;
+    final point = coordinates.value;
+    if (point == null) return;
     isWeatherLoading.value = true;
     weather.value = await getCurrentWeatherUseCase(point)
         .then<WeatherSnapshot?>((value) => value)

@@ -105,5 +105,9 @@ abstract final class AppDimensions {
 
   static const int locationAttempts = 2;
 
+  static const double actionButtonHeight = 40;
+  static const double actionButtonIcon = 18;
+  static const double locationPromptIcon = 36;
+
   static const double designWidth = maxContentWidth;
 }
