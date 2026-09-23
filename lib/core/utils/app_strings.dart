@@ -72,6 +72,13 @@ abstract final class AppStrings {
   static const rainShowers = 'Rain Showers';
   static const snowShowers = 'Snow Showers';
   static const thunderstorm = 'Thunderstorm';
+  static const thunderstormHail = 'Thunderstorm with Hail';
+  static const freezingDrizzle = 'Freezing Drizzle';
+  static const heavyRain = 'Heavy Rain';
+  static const freezingRain = 'Freezing Rain';
+  static const heavySnow = 'Heavy Snow';
+  static const snowGrains = 'Snow Grains';
+  static const heavyRainShowers = 'Heavy Rain Showers';
   static const unknownCondition = 'Unknown';
   static const weatherUnavailable = 'Weather unavailable';
   static const locationUnavailable = 'Location unavailable';

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_durations.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -129,7 +130,10 @@ class DashboardController extends GetxController {
     return current == null ? AppStrings.noValue : Formatters.temperature(current.temperatureC);
   }
 
-  String get weatherConditionLabel => weather.value?.condition ?? AppStrings.weatherUnavailable;
+  String get weatherConditionLabel =>
+      weather.value?.condition.label ?? AppStrings.weatherUnavailable;
+
+  String get weatherIcon => weather.value?.icon ?? AppAssets.weatherNotAvailable;
 
   String get weatherRainChanceLabel {
     final current = weather.value;

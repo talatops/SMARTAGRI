@@ -13,6 +13,7 @@ abstract final class OpenMeteoKeys {
   static const weatherCode = 'weather_code';
   static const windSpeed = 'wind_speed_10m';
   static const precipitationProbability = 'precipitation_probability';
+  static const isDay = 'is_day';
 
   static const currentFields = [
     temperature,
@@ -20,5 +21,6 @@ abstract final class OpenMeteoKeys {
     weatherCode,
     windSpeed,
     precipitationProbability,
+    isDay,
   ];
 }

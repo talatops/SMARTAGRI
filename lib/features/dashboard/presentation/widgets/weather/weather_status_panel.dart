@@ -88,6 +88,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     ),
                   ),
                   WeatherIllustration(
+                    icon: controller.weatherIcon,
                     size: context.adaptive<double>(mobile: 78, tablet: 80, desktop: 96),
                   ),
                 ],
