@@ -1,4 +1,5 @@
 import '../entities/dashboard_snapshot.dart';
+import '../entities/weather_snapshot.dart';
 import '../../../../core/utils/enums.dart';
 
 abstract class DashboardRepository {
@@ -11,4 +12,6 @@ abstract class DashboardRepository {
   Future<void> togglePump({required bool isOn});
 
   Future<void> selectCrop(CropType crop);
+
+  Future<void> saveWeather(WeatherSnapshot weather);
 }

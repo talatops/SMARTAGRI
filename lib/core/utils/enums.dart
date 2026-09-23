@@ -118,4 +118,17 @@ enum WeatherCondition {
   const WeatherCondition(this.label, this.dayIcon, this.nightIcon);
 
   String iconFor({required bool isDay}) => isDay ? dayIcon : nightIcon;
+
+  bool get isRaining => switch (this) {
+    drizzle ||
+    freezingDrizzle ||
+    rain ||
+    heavyRain ||
+    freezingRain ||
+    rainShowers ||
+    heavyRainShowers ||
+    thunderstorm ||
+    thunderstormHail => true,
+    _ => false,
+  };
 }
