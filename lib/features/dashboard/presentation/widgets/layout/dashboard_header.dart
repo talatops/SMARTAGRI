@@ -24,14 +24,18 @@ class DashboardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brand = _Brand();
-    final meta = _Meta(controller: controller);
+    final meta = _Meta(
+      controller: controller,
+      fitWidth: context.isTabletLayout,
+      stacked: context.isMobileLayout,
+    );
 
     if (context.isMobileLayout) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           brand,
-          HeightBox(height: AppDimensions.s10.h),
+          HeightBox(height: AppDimensions.s12.h),
           meta,
         ],
       );
@@ -45,9 +49,13 @@ class DashboardHeader extends StatelessWidget {
           const VerticalDividerLine(height: 30),
           WidthBox(width: AppDimensions.s20.w),
           const Expanded(child: _Tagline()),
-        ] else
-          const Spacer(),
-        meta,
+          meta,
+        ] else ...[
+          WidthBox(width: AppDimensions.s20.w),
+          Expanded(
+            child: Align(alignment: Alignment.centerRight, child: meta),
+          ),
+        ],
       ],
     );
   }
@@ -117,23 +125,33 @@ class _Tagline extends StatelessWidget {
 
 class _Meta extends StatelessWidget {
   final DashboardController controller;
+  final bool fitWidth;
+  final bool stacked;
 
-  const _Meta({required this.controller});
+  const _Meta({required this.controller, this.fitWidth = false, this.stacked = false});
 
   @override
   Widget build(BuildContext context) {
-    Widget item(IconData icon, String text) => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16.r, color: AppColors.primaryBlue),
-        WidthBox(width: AppDimensions.s8.w),
-        CustomText(text: text, style: AppTextStyles.headerMeta, maxLines: 1),
-      ],
-    );
+    Widget item(IconData icon, String text, {bool shrink = false}) {
+      final label = CustomText(
+        text: text,
+        style: AppTextStyles.headerMeta,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16.r, color: AppColors.primaryBlue),
+          WidthBox(width: AppDimensions.s8.w),
+          if (shrink) Flexible(child: label) else label,
+        ],
+      );
+    }
 
     Widget locationItem() {
       if (!controller.showLocationPlaceholder) {
-        return item(AppAssets.locationPin, controller.locationLabel);
+        return item(AppAssets.locationPin, controller.locationLabel, shrink: fitWidth || stacked);
       }
 
       return Row(
@@ -153,6 +171,43 @@ class _Meta extends StatelessWidget {
 
     return Obx(() {
       final now = controller.now.value;
+
+      if (stacked) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                item(AppAssets.calendar, Formatters.date(now)),
+                WidthBox(width: AppDimensions.s12.w),
+                const VerticalDividerLine(height: 16),
+                WidthBox(width: AppDimensions.s12.w),
+                item(AppAssets.clock, Formatters.time(now)),
+              ],
+            ),
+            HeightBox(height: AppDimensions.s8.h),
+            locationItem(),
+          ],
+        );
+      }
+
+      if (fitWidth) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            item(AppAssets.calendar, Formatters.date(now)),
+            WidthBox(width: AppDimensions.s12.w),
+            const VerticalDividerLine(height: 20),
+            WidthBox(width: AppDimensions.s12.w),
+            item(AppAssets.clock, Formatters.time(now)),
+            WidthBox(width: AppDimensions.s12.w),
+            const VerticalDividerLine(height: 20),
+            WidthBox(width: AppDimensions.s12.w),
+            Flexible(child: locationItem()),
+          ],
+        );
+      }
 
       return Wrap(
         spacing: AppDimensions.s12.w,
