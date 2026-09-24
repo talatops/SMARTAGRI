@@ -31,6 +31,13 @@ abstract final class AppColors {
   static const cropSugarcane = Color(0xFF7CB342);
   static const cropMaize = Color(0xFFFFC107);
 
+  static const chartBlue = cyan;
+  static const chartYellow = Color(0xFFFFD54F);
+  static const chartPurple = Color(0xFF9C7CFF);
+  static const chartGreen = Color(0xFF2EE6A6);
+  static const chartGrid = Color(0xFF142740);
+  static const chartCrosshair = Color(0xCCFFFFFF);
+
   static Color pillFill(Color c) => c.withValues(alpha: 0.12);
   static Color pillBorder(Color c) => c.withValues(alpha: 0.40);
   static Color glow(Color c) => c.withValues(alpha: 0.35);

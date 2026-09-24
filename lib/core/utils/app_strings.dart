@@ -111,6 +111,35 @@ abstract final class AppStrings {
   static const sugarcane = 'Sugarcane';
   static const maize = 'Maize';
 
+  static const historySoilTitle = 'Historical Soil Moisture Analytics';
+  static const historySoilSubtitle = 'Soil moisture levels across different depths and composite';
+  static const historyTemperatureTitle = 'Temperature Comparison';
+  static const historyTemperatureSubtitle = 'Field telemetry vs Weather API temperature';
+  static const historyHumidityTitle = 'Field Telemetry Humidity';
+  static const historyHumiditySubtitle = 'Relative humidity from field sensors and weather API';
+  static const historyPumpTitle = 'Pump ON/OFF History';
+  static const historyPumpSubtitle = 'Irrigation pump status';
+  static const historyRangeTooltip = 'Select time range';
+  static const last6Hours = 'Last 6 Hours';
+  static const last12Hours = 'Last 12 Hours';
+  static const last24Hours = 'Last 24 Hours';
+  static const timeAxis6Hours = 'Time (6 Hours)';
+  static const timeAxis12Hours = 'Time (12 Hours)';
+  static const timeAxis24Hours = 'Time (24 Hours)';
+  static const moistureAxis = 'Moisture Level (%)';
+  static const temperatureAxis = 'Temperature (°C)';
+  static const humidityAxis = 'Humidity (%)';
+  static const surfaceSeries = 'Surface (5cm)';
+  static const rootSeries = 'Root (20cm)';
+  static const deepSeries = 'Deep (40cm)';
+  static const compositeSeries = 'Composite';
+  static const fieldTemperatureSeries = 'Field Telemetry Temperature';
+  static const weatherTemperatureSeries = 'Weather API Temperature';
+  static const fieldHumiditySeries = 'Field Humidity (Sensor)';
+  static const weatherHumiditySeries = 'Weather API Humidity';
+  static const pumpStatusSeries = 'Pump Status';
+  static const tooltipSeparator = ': ';
+
   static const lastUpdated = 'Last Updated: ';
   static const appVersion = 'v1.0.0';
 

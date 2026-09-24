@@ -132,6 +132,30 @@ abstract final class AppTextStyles {
     letterSpacing: 0.4,
   );
 
+  static const chartAxis = TextStyle(
+    fontSize: 10.5,
+    fontWeight: AppFonts.medium,
+    color: AppColors.textSecondary,
+  );
+
+  static const chartAxisTitle = TextStyle(
+    fontSize: 11,
+    fontWeight: AppFonts.medium,
+    color: AppColors.textSecondary,
+  );
+
+  static const chartLegend = TextStyle(
+    fontSize: 12,
+    fontWeight: AppFonts.medium,
+    color: AppColors.textPrimary,
+  );
+
+  static const chartTooltip = TextStyle(
+    fontSize: 12,
+    fontWeight: AppFonts.semiBold,
+    color: AppColors.textPrimary,
+  );
+
   static const footerText = TextStyle(
     fontSize: 12,
     fontWeight: AppFonts.regular,

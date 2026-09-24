@@ -15,6 +15,7 @@ class AppCard extends StatelessWidget {
   final Color iconColor;
   final Widget child;
   final EdgeInsetsGeometry? padding;
+  final Widget? trailing;
 
   final Widget? backgroundLayer;
 
@@ -28,6 +29,7 @@ class AppCard extends StatelessWidget {
     required this.child,
     this.iconColor = AppColors.success,
     this.padding,
+    this.trailing,
     this.backgroundLayer,
     this.expandChild = true,
   });
@@ -40,7 +42,13 @@ class AppCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
       children: [
-        _Header(title: title, subtitle: subtitle, icon: icon, iconColor: iconColor),
+        _Header(
+          title: title,
+          subtitle: subtitle,
+          icon: icon,
+          iconColor: iconColor,
+          trailing: trailing,
+        ),
         HeightBox(height: AppDimensions.s16.h),
         if (expand) Expanded(child: child) else child,
       ],
@@ -72,12 +80,14 @@ class _Header extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final Color iconColor;
+  final Widget? trailing;
 
   const _Header({
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.iconColor,
+    required this.trailing,
   });
 
   @override
@@ -110,6 +120,10 @@ class _Header extends StatelessWidget {
             ],
           ),
         ),
+        if (trailing != null) ...[
+          WidthBox(width: AppDimensions.s12.w),
+          trailing!,
+        ],
       ],
     );
   }
