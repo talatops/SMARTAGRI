@@ -14,6 +14,7 @@ import '../../domain/entities/crop_profile.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
 import '../../domain/entities/geo_point.dart';
 import '../../domain/entities/location_exception.dart';
+import '../../domain/entities/sensor_history.dart';
 import '../../domain/entities/weather_snapshot.dart';
 import '../../domain/use_cases/get_current_weather_use_case.dart';
 import '../../domain/use_cases/get_dashboard_snapshot_use_case.dart';
@@ -25,10 +26,12 @@ import '../../domain/use_cases/select_crop_use_case.dart';
 import '../../domain/use_cases/set_pump_mode_use_case.dart';
 import '../../domain/use_cases/toggle_pump_use_case.dart';
 import '../../domain/use_cases/watch_dashboard_snapshot_use_case.dart';
+import '../../domain/use_cases/watch_sensor_history_use_case.dart';
 
 class DashboardController extends GetxController with WidgetsBindingObserver {
   final GetDashboardSnapshotUseCase getDashboardSnapshotUseCase;
   final WatchDashboardSnapshotUseCase watchDashboardSnapshotUseCase;
+  final WatchSensorHistoryUseCase watchSensorHistoryUseCase;
   final SetPumpModeUseCase setPumpModeUseCase;
   final TogglePumpUseCase togglePumpUseCase;
   final SelectCropUseCase selectCropUseCase;
@@ -43,6 +46,7 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
   DashboardController({
     required this.getDashboardSnapshotUseCase,
     required this.watchDashboardSnapshotUseCase,
+    required this.watchSensorHistoryUseCase,
     required this.setPumpModeUseCase,
     required this.togglePumpUseCase,
     required this.selectCropUseCase,
@@ -69,12 +73,15 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
   final Rxn<String> locationName = Rxn<String>();
   final RxBool isLocationLoading = true.obs;
   final Rxn<LocationIssue> locationIssue = Rxn<LocationIssue>();
+  final Rxn<SensorHistory> sensorHistory = Rxn<SensorHistory>();
+  final RxMap<HistoryChart, HistoryRange> historyRanges = <HistoryChart, HistoryRange>{}.obs;
 
   Timer? _clock;
   bool _isResolvingLocation = false;
   bool _isAwaitingSettings = false;
   Timer? _weatherTimer;
   StreamSubscription<DashboardSnapshot>? _subscription;
+  StreamSubscription<SensorHistory>? _historySubscription;
 
   @override
   void onInit() {
@@ -82,6 +89,7 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _clock = Timer.periodic(AppDurations.clockTick, (_) => now.value = clock());
     watchDashboard();
+    watchSensorHistory();
     loadLocation();
     _weatherTimer = Timer.periodic(AppDurations.weatherRefresh, (_) => loadWeather());
   }
@@ -95,6 +103,8 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
     _weatherTimer = null;
     _subscription?.cancel();
     _subscription = null;
+    _historySubscription?.cancel();
+    _historySubscription = null;
     super.onClose();
   }
 
@@ -289,6 +299,19 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
       onError: (Object _) => isLoading.value = false,
     );
   }
+
+  void watchSensorHistory() {
+    _historySubscription?.cancel();
+    _historySubscription = watchSensorHistoryUseCase().listen(
+      (result) => sensorHistory.value = result,
+      onError: (Object _) {},
+    );
+  }
+
+  HistoryRange historyRangeOf(HistoryChart chart) =>
+      historyRanges[chart] ?? HistoryRange.last24Hours;
+
+  void selectHistoryRange(HistoryChart chart, HistoryRange range) => historyRanges[chart] = range;
 
   void _apply(DashboardSnapshot result) {
     snapshot.value = result;

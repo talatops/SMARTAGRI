@@ -7,6 +7,8 @@ abstract final class AppAssets {
   static const locationPin = Icons.location_on_outlined;
   static const locationOff = Icons.location_off_rounded;
   static const refresh = Icons.refresh_rounded;
+  static const dropdownArrow = Icons.keyboard_arrow_down_rounded;
+  static const check = Icons.check_rounded;
 
   static const soilPanel = Icons.grass_rounded;
   static const compositePanel = Icons.water_drop_rounded;
@@ -14,6 +16,11 @@ abstract final class AppAssets {
   static const irrigationPanel = Icons.settings_rounded;
   static const weatherPanel = Icons.wb_cloudy_rounded;
   static const cropPanel = Icons.eco;
+
+  static const historySoil = Icons.water_drop_rounded;
+  static const historyTemperature = Icons.thermostat_rounded;
+  static const historyHumidity = Icons.water_drop_outlined;
+  static const historyPump = Icons.plumbing_rounded;
 
   static const surfaceZone = Icons.waves_rounded;
   static const rootZone = Icons.local_florist_rounded;

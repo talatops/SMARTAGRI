@@ -36,6 +36,30 @@ abstract final class AppDimensions {
   static const double pumpButtonSize = 144;
   static const double pumpButtonSizeMobile = 124;
 
+  static const double historyChartHeight = 220;
+  static const double historyChartHeightMobile = 240;
+  static const double historyPumpChartHeight = 130;
+  static const double historyLegendWidth = 190;
+  static const double historyLineWidth = 2;
+  static const double historyDotRadius = 2.5;
+  static const double historyTouchDotRadius = 5;
+  static const double historyTouchDotStroke = 2;
+  static const double historyCrosshairWidth = 1.5;
+  static const double historyTouchThreshold = double.infinity;
+  static const double historyTooltipWidth = 280;
+  static const int historyDash = 4;
+  static const double historyCurveSmoothness = 0.25;
+  static const double historyLeftAxisSize = 44;
+  static const double historyBottomAxisSize = 28;
+  static const double historyAxisNameSize = 22;
+  static const double historyLegendMarkerWidth = 18;
+  static const double historyLegendDotSize = 8;
+  static const double historyRangeBadgeHeight = 32;
+  static const double historyRangeOptionHeight = 40;
+  static const int historyMaxTimeLabelsDesktop = 24;
+  static const int historyMaxTimeLabelsTablet = 12;
+  static const int historyMaxTimeLabelsMobile = 6;
+
   static const double panelIconBox = 42;
   static const double panelIconBoxMobile = 36;
 

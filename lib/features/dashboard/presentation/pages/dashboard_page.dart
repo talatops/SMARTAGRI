@@ -9,6 +9,7 @@ import '../../../../core/widgets/max_width_container.dart';
 import '../controller/dashboard_controller.dart';
 import '../widgets/composite/composite_moisture_panel.dart';
 import '../widgets/crop/crop_profile_panel.dart';
+import '../widgets/history/sensor_history_section.dart';
 import '../widgets/layout/dashboard_footer.dart';
 import '../widgets/layout/dashboard_grid.dart';
 import '../widgets/layout/dashboard_header.dart';
@@ -48,6 +49,7 @@ class DashboardPage extends GetView<DashboardController> {
                   weatherPanel: WeatherStatusPanel(controller: controller),
                   cropPanel: CropProfilePanel(controller: controller),
                 ),
+                SensorHistorySection(controller: controller),
                 HeightBox(height: AppDimensions.s16.h),
                 DashboardFooter(controller: controller),
               ],

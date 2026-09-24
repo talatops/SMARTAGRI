@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'app_assets.dart';
+import 'app_colors.dart';
 import 'app_strings.dart';
+import 'formatters.dart';
 
 enum MetricStatus {
   normal(AppStrings.normal),
@@ -131,4 +135,118 @@ enum WeatherCondition {
     thunderstormHail => true,
     _ => false,
   };
+}
+
+enum HistorySeries {
+  surfaceMoisture(AppStrings.surfaceSeries, AppColors.chartBlue),
+  rootMoisture(AppStrings.rootSeries, AppColors.chartYellow),
+  deepMoisture(AppStrings.deepSeries, AppColors.chartPurple),
+  compositeMoisture(AppStrings.compositeSeries, AppColors.chartGreen),
+  fieldTemperature(AppStrings.fieldTemperatureSeries, AppColors.chartBlue),
+  weatherTemperature(AppStrings.weatherTemperatureSeries, AppColors.chartYellow),
+  fieldHumidity(AppStrings.fieldHumiditySeries, AppColors.chartGreen),
+  weatherHumidity(AppStrings.weatherHumiditySeries, AppColors.chartPurple),
+  pumpStatus(AppStrings.pumpStatusSeries, AppColors.chartBlue);
+
+  final String label;
+  final Color color;
+  const HistorySeries(this.label, this.color);
+}
+
+enum HistoryChart {
+  soilMoisture(
+    title: AppStrings.historySoilTitle,
+    subtitle: AppStrings.historySoilSubtitle,
+    icon: AppAssets.historySoil,
+    axisTitle: AppStrings.moistureAxis,
+    minY: 0,
+    maxY: 100,
+    interval: 20,
+    series: [
+      HistorySeries.surfaceMoisture,
+      HistorySeries.rootMoisture,
+      HistorySeries.deepMoisture,
+      HistorySeries.compositeMoisture,
+    ],
+  ),
+  temperature(
+    title: AppStrings.historyTemperatureTitle,
+    subtitle: AppStrings.historyTemperatureSubtitle,
+    icon: AppAssets.historyTemperature,
+    axisTitle: AppStrings.temperatureAxis,
+    minY: 0,
+    maxY: 50,
+    interval: 10,
+    series: [HistorySeries.fieldTemperature, HistorySeries.weatherTemperature],
+  ),
+  humidity(
+    title: AppStrings.historyHumidityTitle,
+    subtitle: AppStrings.historyHumiditySubtitle,
+    icon: AppAssets.historyHumidity,
+    axisTitle: AppStrings.humidityAxis,
+    minY: 0,
+    maxY: 100,
+    interval: 20,
+    series: [HistorySeries.fieldHumidity, HistorySeries.weatherHumidity],
+  ),
+  pump(
+    title: AppStrings.historyPumpTitle,
+    subtitle: AppStrings.historyPumpSubtitle,
+    icon: AppAssets.historyPump,
+    axisTitle: AppStrings.pumpStatusSeries,
+    minY: -0.15,
+    maxY: 1.25,
+    interval: 1,
+    series: [HistorySeries.pumpStatus],
+    isStepped: true,
+  );
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final String axisTitle;
+  final double minY;
+  final double maxY;
+  final double interval;
+  final List<HistorySeries> series;
+  final bool isStepped;
+
+  const HistoryChart({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.axisTitle,
+    required this.minY,
+    required this.maxY,
+    required this.interval,
+    required this.series,
+    this.isStepped = false,
+  });
+
+  bool get isPump => this == HistoryChart.pump;
+
+  String axisLabel(double value) => switch (this) {
+    soilMoisture => Formatters.percent(value, decimals: 0),
+    pump => _onOff(value),
+    temperature || humidity => value.toStringAsFixed(0),
+  };
+
+  String valueLabel(double value) => switch (this) {
+    soilMoisture || humidity => Formatters.percent(value),
+    temperature => Formatters.temperature(value),
+    pump => _onOff(value),
+  };
+
+  static String _onOff(double value) => value >= 0.5 ? AppStrings.on : AppStrings.off;
+}
+
+enum HistoryRange {
+  last6Hours(AppStrings.last6Hours, AppStrings.timeAxis6Hours, 6),
+  last12Hours(AppStrings.last12Hours, AppStrings.timeAxis12Hours, 12),
+  last24Hours(AppStrings.last24Hours, AppStrings.timeAxis24Hours, 24);
+
+  final String label;
+  final String axisTitle;
+  final int hours;
+  const HistoryRange(this.label, this.axisTitle, this.hours);
 }

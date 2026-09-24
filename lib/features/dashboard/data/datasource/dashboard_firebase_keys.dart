@@ -21,4 +21,14 @@ abstract final class DashboardFirebaseKeys {
   static const isRaining = 'is_raining';
   static const rainProbability = 'rain_probability';
   static const weatherTemperature = 'temperature_c';
+
+  static const graphs = 'graphs';
+  static const soilMoistureGraph = 'historical_soil_moisture_analytics';
+  static const temperatureGraph = 'temperature_comparison';
+  static const humidityGraph = 'field_telemetry_humidity';
+  static const pumpGraph = 'pump_on_off_history';
+  static const fieldTemperatureHistory = 'field_telemetry_temperature';
+  static const weatherTemperatureHistory = 'weather_api_temperature';
+  static const fieldHumidityHistory = 'field_humidity_sensor';
+  static const weatherHumidityHistory = 'weather_api_humidity';
 }

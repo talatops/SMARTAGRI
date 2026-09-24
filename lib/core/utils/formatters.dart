@@ -4,6 +4,7 @@ abstract final class Formatters {
   static final _date = DateFormat('MMM dd, yyyy');
   static final _time = DateFormat('h:mm a');
   static final _timeWithSeconds = DateFormat('h:mm:ss a');
+  static final _hour = DateFormat('h a');
 
   static String percent(double value, {int decimals = 1}) => '${_trimNumber(value, decimals)}%';
 
@@ -22,6 +23,8 @@ abstract final class Formatters {
   static String time(DateTime value) => _time.format(value);
 
   static String timeWithSeconds(DateTime value) => _timeWithSeconds.format(value);
+
+  static String hour(int hourOfDay) => _hour.format(DateTime(0, 1, 1, hourOfDay));
 
   static String _trimNumber(double value, int decimals) {
     final fixed = value.toStringAsFixed(decimals);
