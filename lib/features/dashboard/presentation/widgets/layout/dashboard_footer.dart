@@ -100,7 +100,7 @@ class _Branding extends StatelessWidget {
       children: [
         Icon(AppAssets.logo, size: 16.r, color: AppColors.success),
         WidthBox(width: AppDimensions.s8.w),
-        CustomText(text: AppStrings.appName, style: AppTextStyles.footerText, maxLines: 1),
+        CustomText(text: AppStrings.poweredBy, style: AppTextStyles.footerText, maxLines: 1),
         WidthBox(width: AppDimensions.s10.w),
         CustomText(text: AppStrings.appVersion, style: AppTextStyles.footerText, maxLines: 1),
       ],

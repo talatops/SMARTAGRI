@@ -1,5 +1,6 @@
 abstract final class AppStrings {
   static const appName = 'Smart Agriculture System';
+  static const poweredBy = 'Copyright 2026 - IRADA Islamabad, PK';
   static const appNamePrefix = 'Smart Agriculture';
   static const appNameSuffix = 'System';
   static const tagline1 = 'Smarter Water';
@@ -8,7 +9,8 @@ abstract final class AppStrings {
   static const location = 'Islamabad, PK';
 
   static const soilPanelTitle = 'Soil & Field Water Metrics';
-  static const soilPanelSubtitle = 'Real-time soil moisture levels and field water status';
+  static const soilPanelSubtitle =
+      'Real-time soil moisture levels and field water status';
   static const surfaceZone = 'Surface Zone';
   static const rootZone = 'Root Zone';
   static const deepZone = 'Deep Zone';
@@ -36,7 +38,8 @@ abstract final class AppStrings {
       'Hold irrigation to avoid waterlogging.';
 
   static const telemetryTitle = 'Field Telemetry';
-  static const telemetrySubtitle = 'Live microclimate data from on-board sensors';
+  static const telemetrySubtitle =
+      'Live microclimate data from on-board sensors';
   static const temperature = 'Temperature';
   static const relativeHumidity = 'Relative Humidity';
   static const normal = 'Normal';
@@ -83,14 +86,16 @@ abstract final class AppStrings {
   static const weatherUnavailable = 'Weather unavailable';
   static const locationUnavailable = 'Location unavailable';
   static const locationSeparator = ', ';
-  static const locationPermissionDenied = 'Allow location access to see the weather for your field.';
+  static const locationPermissionDenied =
+      'Allow location access to see the weather for your field.';
   static const locationPermissionBlocked =
       'Location access is blocked. Enable it in settings to see the weather for your field.';
   static const locationPermissionBlockedWeb =
       'Location access is blocked. Click the site icon in the address bar, allow Location, then try again.';
   static const locationServiceDisabled =
       'Location services are turned off. Turn them on to see the weather for your field.';
-  static const locationFetchFailed = 'Couldn\'t get your location. Please try again.';
+  static const locationFetchFailed =
+      'Couldn\'t get your location. Please try again.';
   static const allowLocation = 'Allow Location';
   static const openSettings = 'Open Settings';
   static const tryAgain = 'Try Again';
