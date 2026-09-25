@@ -12,7 +12,7 @@ plugins {
 
 // 1. KOTLIN DSL WAY TO LOAD PROPERTIES
 val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("key.properties")
+val keystorePropertiesFile = rootProject.file("iot_key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
