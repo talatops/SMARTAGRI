@@ -26,10 +26,10 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScaffold(
       body: Consumer(builder: (context, ref, _) {
-        final (snapshot, isLoading) = ref.watch(
-          dashboardProvider.select((state) => (state.snapshot, state.isLoading)),
+        final (hasSnapshot, isLoading) = ref.watch(
+          dashboardProvider.select((state) => (state.snapshot != null, state.isLoading)),
         );
-        if (isLoading || snapshot == null) {
+        if (isLoading || !hasSnapshot) {
           return const MaxWidthContainer(child: DashboardSkeleton());
         }
 
@@ -41,12 +41,9 @@ class DashboardPage extends StatelessWidget {
                 DashboardHeader(),
                 HeightBox(height: AppDimensions.s16.h),
                 DashboardGrid(
-                  soilPanel: SoilMetricsPanel(
-                    readings: snapshot.soilReadings,
-                    waterLevel: snapshot.waterLevel,
-                  ),
+                  soilPanel: SoilMetricsPanel(),
                   compositePanel: CompositeMoisturePanel(),
-                  telemetryPanel: FieldTelemetryPanel(telemetry: snapshot.telemetry),
+                  telemetryPanel: FieldTelemetryPanel(),
                   irrigationPanel: IrrigationControlPanel(),
                   weatherPanel: WeatherStatusPanel(),
                   cropPanel: CropProfilePanel(),
