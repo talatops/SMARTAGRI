@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_agri_system/core/utils/app_assets.dart';
-import 'package:smart_agri_system/core/utils/app_colors.dart';
 import 'package:smart_agri_system/core/utils/app_durations.dart';
 import 'package:smart_agri_system/core/utils/app_strings.dart';
 import 'package:smart_agri_system/core/utils/enums.dart';
@@ -61,7 +60,6 @@ void main() {
         expect(h.compositeStatus, MetricStatus.normal);
         expect(h.compositeHeadline, AppStrings.optimalSoilMoisture);
         expect(h.compositeDescription, AppStrings.optimalDescription);
-        expect(h.compositeAccent, AppColors.success);
         expect(h.isPumpControlEnabled, isFalse);
         expect(h.pumpStatusLabel, AppStrings.off);
         expect(h.pumpStatusDescription, AppStrings.pumpDisabled);
@@ -166,7 +164,6 @@ void main() {
       MetricStatus status,
       String headline,
       String description,
-      Color accent,
     ) async {
       await withHarness(tester, (h, f) async {
         f.dashboard.emit(buildSnapshot(score: score));
@@ -175,7 +172,6 @@ void main() {
         expect(h.compositeStatus, status);
         expect(h.compositeHeadline, headline);
         expect(h.compositeDescription, description);
-        expect(h.compositeAccent, accent);
       });
     }
 
@@ -186,7 +182,6 @@ void main() {
         MetricStatus.normal,
         AppStrings.optimalSoilMoisture,
         AppStrings.optimalDescription,
-        AppColors.success,
       );
     });
 
@@ -197,7 +192,6 @@ void main() {
         MetricStatus.normal,
         AppStrings.optimalSoilMoisture,
         AppStrings.optimalDescription,
-        AppColors.success,
       );
     });
 
@@ -208,7 +202,6 @@ void main() {
         MetricStatus.normal,
         AppStrings.optimalSoilMoisture,
         AppStrings.optimalDescription,
-        AppColors.success,
       );
     });
 
@@ -219,7 +212,6 @@ void main() {
         MetricStatus.warning,
         AppStrings.belowRangeTitle,
         AppStrings.belowRangeDescription,
-        AppColors.amber,
       );
     });
 
@@ -230,7 +222,6 @@ void main() {
         MetricStatus.warning,
         AppStrings.aboveRangeTitle,
         AppStrings.aboveRangeDescription,
-        AppColors.amber,
       );
     });
   });

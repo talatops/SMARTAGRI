@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:smart_agri_system/core/utils/enums.dart';
@@ -60,7 +59,6 @@ class DashboardHarness {
   MetricStatus get compositeStatus => _state.compositeStatus;
   String get compositeHeadline => _state.compositeHeadline;
   String get compositeDescription => _state.compositeDescription;
-  Color get compositeAccent => _state.compositeAccent;
   bool get isPumpControlEnabled => _state.isPumpControlEnabled;
   String get pumpStatusLabel => _state.pumpStatusLabel;
   String get pumpStatusDescription => _state.pumpStatusDescription;

@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_assets.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/formatters.dart';
@@ -136,7 +134,6 @@ class DashboardState {
     return AppStrings.optimalDescription;
   }
 
-  Color get compositeAccent => compositeStatus.isNormal ? AppColors.success : AppColors.amber;
 
   bool get isPumpControlEnabled => pumpMode.isManual;
 

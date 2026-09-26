@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/utils/app_durations.dart';
 import '../../../../core/utils/enums.dart';
@@ -13,11 +13,10 @@ import '../../domain/entities/weather_snapshot.dart';
 import '../providers/dashboard_providers.dart';
 import 'dashboard_state.dart';
 
-final dashboardProvider = NotifierProvider<DashboardNotifier, DashboardState>(
-  DashboardNotifier.new,
-);
+part 'dashboard_notifier.g.dart';
 
-class DashboardNotifier extends Notifier<DashboardState> with WidgetsBindingObserver {
+@Riverpod(keepAlive: true)
+class DashboardNotifier extends _$DashboardNotifier with WidgetsBindingObserver {
   late DateTime Function() _clock;
   bool _isResolvingLocation = false;
   bool _isAwaitingSettings = false;

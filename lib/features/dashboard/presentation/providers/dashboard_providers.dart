@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/utils/app_durations.dart';
 import '../../data/datasource/dashboard_data_source.dart';
@@ -33,94 +33,92 @@ import '../../domain/use_cases/toggle_pump_use_case.dart';
 import '../../domain/use_cases/watch_dashboard_snapshot_use_case.dart';
 import '../../domain/use_cases/watch_sensor_history_use_case.dart';
 
-final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
+part 'dashboard_providers.g.dart';
 
-final dashboardDataSourceProvider = Provider<DashboardDataSource>(
-  (ref) => DashboardFirebaseDataSource(
-    database: FirebaseDatabase.instance,
-    fallback: DashboardMockDataSource(),
-  ),
+@Riverpod(keepAlive: true)
+DateTime Function() clock(Ref ref) => DateTime.now;
+
+@Riverpod(keepAlive: true)
+DashboardDataSource dashboardDataSource(Ref ref) => DashboardFirebaseDataSource(
+  database: FirebaseDatabase.instance,
+  fallback: DashboardMockDataSource(),
 );
 
-final sensorHistoryDataSourceProvider = Provider<SensorHistoryDataSource>(
-  (ref) => SensorHistoryFirebaseDataSource(database: FirebaseDatabase.instance),
+@Riverpod(keepAlive: true)
+SensorHistoryDataSource sensorHistoryDataSource(Ref ref) =>
+    SensorHistoryFirebaseDataSource(database: FirebaseDatabase.instance);
+
+@Riverpod(keepAlive: true)
+WeatherDataSource weatherDataSource(Ref ref) => WeatherOpenMeteoDataSource(
+  client: Dio(BaseOptions(connectTimeout: AppDurations.requestTimeout)),
 );
 
-final weatherDataSourceProvider = Provider<WeatherDataSource>(
-  (ref) => WeatherOpenMeteoDataSource(
-    client: Dio(BaseOptions(connectTimeout: AppDurations.requestTimeout)),
-  ),
+@Riverpod(keepAlive: true)
+DeviceLocationDataSource deviceLocationDataSource(Ref ref) => DeviceLocationGeolocatorDataSource();
+
+@Riverpod(keepAlive: true)
+PlaceNameDataSource placeNameDataSource(Ref ref) => PlaceNameNominatimDataSource(
+  client: Dio(BaseOptions(connectTimeout: AppDurations.requestTimeout)),
 );
 
-final deviceLocationDataSourceProvider = Provider<DeviceLocationDataSource>(
-  (ref) => DeviceLocationGeolocatorDataSource(),
+@Riverpod(keepAlive: true)
+DashboardRepository dashboardRepository(Ref ref) =>
+    DashboardRepositoryImpl(dataSource: ref.watch(dashboardDataSourceProvider));
+
+@Riverpod(keepAlive: true)
+SensorHistoryRepository sensorHistoryRepository(Ref ref) =>
+    SensorHistoryRepositoryImpl(dataSource: ref.watch(sensorHistoryDataSourceProvider));
+
+@Riverpod(keepAlive: true)
+WeatherRepository weatherRepository(Ref ref) =>
+    WeatherRepositoryImpl(dataSource: ref.watch(weatherDataSourceProvider));
+
+@Riverpod(keepAlive: true)
+LocationRepository locationRepository(Ref ref) => LocationRepositoryImpl(
+  deviceDataSource: ref.watch(deviceLocationDataSourceProvider),
+  placeNameDataSource: ref.watch(placeNameDataSourceProvider),
 );
 
-final placeNameDataSourceProvider = Provider<PlaceNameDataSource>(
-  (ref) => PlaceNameNominatimDataSource(
-    client: Dio(BaseOptions(connectTimeout: AppDurations.requestTimeout)),
-  ),
-);
+@Riverpod(keepAlive: true)
+GetCurrentWeatherUseCase getCurrentWeatherUseCase(Ref ref) =>
+    GetCurrentWeatherUseCase(repository: ref.watch(weatherRepositoryProvider));
 
-final dashboardRepositoryProvider = Provider<DashboardRepository>(
-  (ref) => DashboardRepositoryImpl(dataSource: ref.watch(dashboardDataSourceProvider)),
-);
+@Riverpod(keepAlive: true)
+GetDeviceLocationUseCase getDeviceLocationUseCase(Ref ref) =>
+    GetDeviceLocationUseCase(repository: ref.watch(locationRepositoryProvider));
 
-final sensorHistoryRepositoryProvider = Provider<SensorHistoryRepository>(
-  (ref) => SensorHistoryRepositoryImpl(dataSource: ref.watch(sensorHistoryDataSourceProvider)),
-);
+@Riverpod(keepAlive: true)
+GetPlaceNameUseCase getPlaceNameUseCase(Ref ref) =>
+    GetPlaceNameUseCase(repository: ref.watch(locationRepositoryProvider));
 
-final weatherRepositoryProvider = Provider<WeatherRepository>(
-  (ref) => WeatherRepositoryImpl(dataSource: ref.watch(weatherDataSourceProvider)),
-);
+@Riverpod(keepAlive: true)
+OpenLocationSettingsUseCase openLocationSettingsUseCase(Ref ref) =>
+    OpenLocationSettingsUseCase(repository: ref.watch(locationRepositoryProvider));
 
-final locationRepositoryProvider = Provider<LocationRepository>(
-  (ref) => LocationRepositoryImpl(
-    deviceDataSource: ref.watch(deviceLocationDataSourceProvider),
-    placeNameDataSource: ref.watch(placeNameDataSourceProvider),
-  ),
-);
+@Riverpod(keepAlive: true)
+GetDashboardSnapshotUseCase getDashboardSnapshotUseCase(Ref ref) =>
+    GetDashboardSnapshotUseCase(repository: ref.watch(dashboardRepositoryProvider));
 
-final getCurrentWeatherUseCaseProvider = Provider(
-  (ref) => GetCurrentWeatherUseCase(repository: ref.watch(weatherRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+WatchDashboardSnapshotUseCase watchDashboardSnapshotUseCase(Ref ref) =>
+    WatchDashboardSnapshotUseCase(repository: ref.watch(dashboardRepositoryProvider));
 
-final getDeviceLocationUseCaseProvider = Provider(
-  (ref) => GetDeviceLocationUseCase(repository: ref.watch(locationRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+WatchSensorHistoryUseCase watchSensorHistoryUseCase(Ref ref) =>
+    WatchSensorHistoryUseCase(repository: ref.watch(sensorHistoryRepositoryProvider));
 
-final getPlaceNameUseCaseProvider = Provider(
-  (ref) => GetPlaceNameUseCase(repository: ref.watch(locationRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+SetPumpModeUseCase setPumpModeUseCase(Ref ref) =>
+    SetPumpModeUseCase(repository: ref.watch(dashboardRepositoryProvider));
 
-final openLocationSettingsUseCaseProvider = Provider(
-  (ref) => OpenLocationSettingsUseCase(repository: ref.watch(locationRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+TogglePumpUseCase togglePumpUseCase(Ref ref) =>
+    TogglePumpUseCase(repository: ref.watch(dashboardRepositoryProvider));
 
-final getDashboardSnapshotUseCaseProvider = Provider(
-  (ref) => GetDashboardSnapshotUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+SelectCropUseCase selectCropUseCase(Ref ref) =>
+    SelectCropUseCase(repository: ref.watch(dashboardRepositoryProvider));
 
-final watchDashboardSnapshotUseCaseProvider = Provider(
-  (ref) => WatchDashboardSnapshotUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
-
-final watchSensorHistoryUseCaseProvider = Provider(
-  (ref) => WatchSensorHistoryUseCase(repository: ref.watch(sensorHistoryRepositoryProvider)),
-);
-
-final setPumpModeUseCaseProvider = Provider(
-  (ref) => SetPumpModeUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
-
-final togglePumpUseCaseProvider = Provider(
-  (ref) => TogglePumpUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
-
-final selectCropUseCaseProvider = Provider(
-  (ref) => SelectCropUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
-
-final saveWeatherUseCaseProvider = Provider(
-  (ref) => SaveWeatherUseCase(repository: ref.watch(dashboardRepositoryProvider)),
-);
+@Riverpod(keepAlive: true)
+SaveWeatherUseCase saveWeatherUseCase(Ref ref) =>
+    SaveWeatherUseCase(repository: ref.watch(dashboardRepositoryProvider));

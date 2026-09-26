@@ -26,8 +26,6 @@ abstract final class AppDimensions {
   static const double s16 = 16;
   static const double s20 = 20;
   static const double s24 = 24;
-  static const double s28 = 28;
-  static const double s32 = 32;
 
   static const double zoneGaugeSize = 78;
   static const double zoneGaugeStroke = 8;
@@ -132,6 +130,4 @@ abstract final class AppDimensions {
   static const double actionButtonHeight = 40;
   static const double actionButtonIcon = 18;
   static const double locationPromptIcon = 36;
-
-  static const double designWidth = maxContentWidth;
 }
