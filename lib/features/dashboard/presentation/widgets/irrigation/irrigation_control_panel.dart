@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -15,12 +15,10 @@ import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/glow_icon_button.dart';
 import '../../../../../core/widgets/metric_tile.dart';
 import '../../../../../core/widgets/segmented_toggle.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 
 class IrrigationControlPanel extends StatelessWidget {
-  final DashboardController controller;
-
-  const IrrigationControlPanel({super.key, required this.controller});
+  const IrrigationControlPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,21 +30,21 @@ class IrrigationControlPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Obx(
-            () => SegmentedToggle<PumpMode>(
+          Consumer(
+            builder: (context, ref, _) => SegmentedToggle<PumpMode>(
               segments: const [
                 SegmentItem(value: PumpMode.auto, label: AppStrings.auto),
                 SegmentItem(value: PumpMode.manual, label: AppStrings.manual),
               ],
-              value: controller.pumpMode.value,
-              onChanged: controller.setPumpMode,
+              value: ref.watch(dashboardProvider.select((state) => state.pumpMode)),
+              onChanged: (mode) => ref.read(dashboardProvider.notifier).setPumpMode(mode),
             ),
           ),
           HeightBox(height: AppDimensions.s16.h),
           if (context.isMobileLayout)
-            _PumpRow(controller: controller)
+            _PumpRow()
           else
-            Expanded(child: _PumpRow(controller: controller)),
+            Expanded(child: _PumpRow()),
         ],
       ),
     );
@@ -54,9 +52,7 @@ class IrrigationControlPanel extends StatelessWidget {
 }
 
 class _PumpRow extends StatelessWidget {
-  final DashboardController controller;
-
-  const _PumpRow({required this.controller});
+  const _PumpRow();
 
   @override
   Widget build(BuildContext context) {
@@ -66,17 +62,22 @@ class _PumpRow extends StatelessWidget {
       desktop: AppDimensions.pumpButtonSize,
     );
 
-    final button = Obx(
-      () => GlowIconButton(
+    final button = Consumer(builder: (context, ref, _) {
+      final (label, isCommandOn, isEnabled) = ref.watch(
+        dashboardProvider.select(
+          (state) => (state.pumpButtonLabel, state.isPumpCommandOn, state.isPumpControlEnabled),
+        ),
+      );
+      return GlowIconButton(
         icon: AppAssets.power,
-        label: controller.pumpButtonLabel,
-        isActive: controller.isPumpCommandOn.value,
+        label: label,
+        isActive: isCommandOn,
         size: buttonSize,
-        onTap: controller.isPumpControlEnabled ? controller.togglePump : null,
-      ),
-    );
+        onTap: isEnabled ? () => ref.read(dashboardProvider.notifier).togglePump() : null,
+      );
+    });
 
-    final status = _PumpStatusBlock(controller: controller);
+    final status = _PumpStatusBlock();
 
     return Center(
       child: context.isMobileLayout
@@ -102,14 +103,16 @@ class _PumpRow extends StatelessWidget {
 }
 
 class _PumpStatusBlock extends StatelessWidget {
-  final DashboardController controller;
-
-  const _PumpStatusBlock({required this.controller});
+  const _PumpStatusBlock();
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final isOn = controller.isPumpOn.value;
+    return Consumer(builder: (context, ref, _) {
+      final (isOn, statusLabel, statusDescription) = ref.watch(
+        dashboardProvider.select(
+          (state) => (state.isPumpOn, state.pumpStatusLabel, state.pumpStatusDescription),
+        ),
+      );
       return MetricTile(
         padding: EdgeInsets.symmetric(
           horizontal: AppDimensions.s14.w,
@@ -141,7 +144,7 @@ class _PumpStatusBlock extends StatelessWidget {
             ),
             HeightBox(height: AppDimensions.s4.h),
             CustomText(
-              text: controller.pumpStatusLabel,
+              text: statusLabel,
               style: AppTextStyles.statusValue,
               fontColor: isOn ? AppColors.success : AppColors.textPrimary,
               maxLines: 1,
@@ -150,7 +153,7 @@ class _PumpStatusBlock extends StatelessWidget {
             ),
             HeightBox(height: AppDimensions.s6.h),
             CustomText(
-              text: controller.pumpStatusDescription,
+              text: statusDescription,
               style: AppTextStyles.captionLabel,
               maxLines: 2,
             ),

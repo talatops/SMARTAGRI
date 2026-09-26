@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../domain/entities/geo_point.dart';
@@ -6,7 +6,7 @@ import 'location_data_source.dart';
 import 'nominatim_keys.dart';
 
 class PlaceNameNominatimDataSource implements PlaceNameDataSource {
-  final GetConnect client;
+  final Dio client;
 
   PlaceNameNominatimDataSource({required this.client});
 
@@ -14,19 +14,22 @@ class PlaceNameNominatimDataSource implements PlaceNameDataSource {
   Future<String> fetchPlaceName(GeoPoint point) async {
     final response = await client.get<Object?>(
       NominatimKeys.reverseUrl,
-      query: {
+      queryParameters: {
         NominatimKeys.latitudeParam: '${point.latitude}',
         NominatimKeys.longitudeParam: '${point.longitude}',
         NominatimKeys.formatParam: NominatimKeys.formatJson,
         NominatimKeys.zoomParam: NominatimKeys.zoomCity,
         NominatimKeys.languageParam: NominatimKeys.languageEnglish,
       },
-      headers: {NominatimKeys.userAgentHeader: AppStrings.appName},
+      options: Options(
+        headers: {NominatimKeys.userAgentHeader: AppStrings.appName},
+        validateStatus: (_) => true,
+      ),
     );
 
-    final body = response.body;
-    if (!response.isOk || body is! Map) {
-      throw Exception(response.statusText ?? AppStrings.locationUnavailable);
+    final body = response.data;
+    if (!_isOk(response.statusCode) || body is! Map) {
+      throw Exception(response.statusMessage ?? AppStrings.locationUnavailable);
     }
 
     final address = body[NominatimKeys.address];
@@ -45,6 +48,8 @@ class PlaceNameNominatimDataSource implements PlaceNameDataSource {
 
     return '$city${AppStrings.locationSeparator}${country.toUpperCase()}';
   }
+
+  bool _isOk(int? statusCode) => statusCode != null && statusCode >= 200 && statusCode <= 299;
 
   String? _first(Map<Object?, Object?> address, List<String> keys) {
     for (final key in keys) {

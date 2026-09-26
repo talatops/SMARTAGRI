@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/utils/enums.dart';
 import '../../../../../core/widgets/constants.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 import 'history_chart_panel.dart';
 
 class SensorHistorySection extends StatelessWidget {
-  final DashboardController controller;
-
-  const SensorHistorySection({super.key, required this.controller});
+  const SensorHistorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final history = controller.sensorHistory.value;
+    return Consumer(builder: (context, ref, _) {
+      final history = ref.watch(dashboardProvider.select((state) => state.sensorHistory));
       if (history == null) return const SizedBox.shrink();
 
       return Column(
@@ -25,8 +23,9 @@ class SensorHistorySection extends StatelessWidget {
             HistoryChartPanel(
               chart: chart,
               history: history,
-              range: controller.historyRangeOf(chart),
-              onRangeSelected: (range) => controller.selectHistoryRange(chart, range),
+              range: ref.watch(dashboardProvider.select((state) => state.historyRangeOf(chart))),
+              onRangeSelected: (range) =>
+                  ref.read(dashboardProvider.notifier).selectHistoryRange(chart, range),
             ),
           ],
         ],

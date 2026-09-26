@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'core/routes/app_pages.dart';
-import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_scroll_behavior.dart';
 import 'core/utils/app_strings.dart';
@@ -13,14 +11,13 @@ class SmartAgriApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp.router(
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       themeMode: ThemeMode.dark,
       scrollBehavior: const AppScrollBehavior(),
-      initialRoute: AppRoutes.dashboard,
-      getPages: AppPages.routes,
+      routerConfig: AppPages.router,
       builder: (context, child) {
         SizeConfig.init(context);
         return child ?? const SizedBox.shrink();
