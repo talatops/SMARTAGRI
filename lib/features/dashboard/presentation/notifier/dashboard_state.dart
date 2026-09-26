@@ -203,5 +203,7 @@ class DashboardState {
   String get locationLabel => locationName ?? AppStrings.locationUnavailable;
 
   HistoryRange historyRangeOf(HistoryChart chart) =>
-      historyRanges[chart] ?? HistoryRange.last24Hours;
+      historyRanges[chart] ?? HistoryRange.today;
+
+  int get currentHour => now.hour;
 }

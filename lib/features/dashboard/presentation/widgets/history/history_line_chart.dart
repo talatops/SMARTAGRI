@@ -17,12 +17,14 @@ class HistoryLineChart extends StatelessWidget {
   final HistoryChart chart;
   final SensorHistory history;
   final HistoryRange range;
+  final List<int> hours;
 
   const HistoryLineChart({
     super.key,
     required this.chart,
     required this.history,
     required this.range,
+    required this.hours,
   });
 
   @override
@@ -32,12 +34,12 @@ class HistoryLineChart extends StatelessWidget {
       tablet: AppDimensions.historyMaxTimeLabelsTablet,
       desktop: AppDimensions.historyMaxTimeLabelsDesktop,
     );
-    final hourLabelStep = (range.hours / maxTimeLabels).ceil();
+    final hourLabelStep = (hours.length / maxTimeLabels).ceil();
 
     return LineChart(
       LineChartData(
-        minX: _firstIndex.toDouble(),
-        maxX: (SensorHistory.hoursInWindow - 1).toDouble(),
+        minX: 0,
+        maxX: math.max(hours.length - 1, 1).toDouble(),
         minY: _minY,
         maxY: _maxY,
         lineBarsData: [for (final series in chart.series) _line(series)],
@@ -56,10 +58,8 @@ class HistoryLineChart extends StatelessWidget {
     );
   }
 
-  int get _firstIndex => SensorHistory.hoursInWindow - range.hours;
-
   Iterable<double> _visibleValues(HistorySeries series) =>
-      history.valuesOf(series).skip(_firstIndex);
+      hours.map((hour) => history.valueAt(series, hour)).nonNulls;
 
   Iterable<double> get _allValues => chart.series.expand(_visibleValues);
 
@@ -76,11 +76,10 @@ class HistoryLineChart extends StatelessWidget {
   }
 
   LineChartBarData _line(HistorySeries series) {
-    final values = history.valuesOf(series);
-
     return LineChartBarData(
       spots: [
-        for (var i = _firstIndex; i < values.length; i++) FlSpot(i.toDouble(), values[i]),
+        for (var i = 0; i < hours.length; i++)
+          if (history.valueAt(series, hours[i]) case final value?) FlSpot(i.toDouble(), value),
       ],
       color: series.color,
       barWidth: AppDimensions.historyLineWidth,
@@ -151,7 +150,7 @@ class HistoryLineChart extends StatelessWidget {
         interval: labelStep.toDouble(),
         reservedSize: AppDimensions.historyBottomAxisSize,
         getTitlesWidget: (value, meta) {
-          if ((value - _firstIndex) % labelStep != 0) return const SizedBox.shrink();
+          if (value % labelStep != 0 || value >= hours.length) return const SizedBox.shrink();
           return SideTitleWidget(
             meta: meta,
             child: CustomText(text: _timeLabel(value.toInt()), style: AppTextStyles.chartAxis),
@@ -207,5 +206,5 @@ class HistoryLineChart extends StatelessWidget {
     );
   }
 
-  String _timeLabel(int index) => Formatters.hour(SensorHistory.hourAt(index));
+  String _timeLabel(int index) => Formatters.hour(hours[index]);
 }

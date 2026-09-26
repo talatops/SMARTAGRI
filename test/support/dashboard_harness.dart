@@ -78,6 +78,7 @@ class DashboardHarness {
   bool get showLocationPlaceholder => _state.showLocationPlaceholder;
   String get locationLabel => _state.locationLabel;
   HistoryRange historyRangeOf(HistoryChart chart) => _state.historyRangeOf(chart);
+  int get currentHour => _state.currentHour;
 
   Future<void> loadLocation() => _notifier.loadLocation();
   Future<void> resolveLocationIssue() => _notifier.resolveLocationIssue();

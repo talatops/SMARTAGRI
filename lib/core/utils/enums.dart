@@ -241,12 +241,21 @@ enum HistoryChart {
 }
 
 enum HistoryRange {
+  today(AppStrings.today, AppStrings.timeAxisToday, null),
   last6Hours(AppStrings.last6Hours, AppStrings.timeAxis6Hours, 6),
   last12Hours(AppStrings.last12Hours, AppStrings.timeAxis12Hours, 12),
   last24Hours(AppStrings.last24Hours, AppStrings.timeAxis24Hours, 24);
 
   final String label;
   final String axisTitle;
-  final int hours;
+  final int? hours;
   const HistoryRange(this.label, this.axisTitle, this.hours);
+
+  List<int> hoursEndingAt(int hourOfDay) {
+    final count = hours ?? hourOfDay + 1;
+    return [
+      for (var offset = count - 1; offset >= 0; offset--)
+        (hourOfDay - offset) % Duration.hoursPerDay,
+    ];
+  }
 }

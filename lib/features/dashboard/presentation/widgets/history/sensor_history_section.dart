@@ -15,6 +15,7 @@ class SensorHistorySection extends StatelessWidget {
     return Consumer(builder: (context, ref, _) {
       final history = ref.watch(dashboardProvider.select((state) => state.sensorHistory));
       if (history == null) return const SizedBox.shrink();
+      final currentHour = ref.watch(dashboardProvider.select((state) => state.currentHour));
 
       return Column(
         children: [
@@ -23,6 +24,7 @@ class SensorHistorySection extends StatelessWidget {
             HistoryChartPanel(
               chart: chart,
               history: history,
+              currentHour: currentHour,
               range: ref.watch(dashboardProvider.select((state) => state.historyRangeOf(chart))),
               onRangeSelected: (range) =>
                   ref.read(dashboardProvider.notifier).selectHistoryRange(chart, range),

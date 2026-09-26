@@ -229,14 +229,14 @@ void main() {
       for (final chart in HistoryChart.values) {
         expect(find.text(chart.title), findsOneWidget);
       }
-      expect(find.text(AppStrings.last24Hours), findsNWidgets(4));
+      expect(find.text(AppStrings.today), findsNWidgets(4));
 
-      await tapText(tester, AppStrings.last24Hours);
+      await tapText(tester, AppStrings.today);
       await tapText(tester, AppStrings.last6Hours, last: true);
       await settle(tester);
 
       expect(find.text(AppStrings.last6Hours), findsOneWidget);
-      expect(find.text(AppStrings.last24Hours), findsNWidgets(3));
+      expect(find.text(AppStrings.today), findsNWidgets(3));
       expect(find.text(AppStrings.timeAxis6Hours), findsOneWidget);
     });
   });

@@ -9,6 +9,7 @@ import 'package:smart_agri_system/core/utils/app_durations.dart';
 import 'package:smart_agri_system/core/utils/app_strings.dart';
 import 'package:smart_agri_system/core/utils/enums.dart';
 import 'package:smart_agri_system/features/dashboard/domain/entities/location_exception.dart';
+import 'package:smart_agri_system/features/dashboard/domain/entities/sensor_history.dart';
 
 import 'support/dashboard_harness.dart';
 import 'support/fakes.dart';
@@ -76,7 +77,7 @@ void main() {
         expect(h.showLocationPlaceholder, isTrue);
         expect(h.locationLabel, AppStrings.locationUnavailable);
         for (final chart in HistoryChart.values) {
-          expect(h.historyRangeOf(chart), HistoryRange.last24Hours);
+          expect(h.historyRangeOf(chart), HistoryRange.today);
         }
 
         expect(f.dashboard.watchCalls, 1);
@@ -779,14 +780,50 @@ void main() {
       await withHarness(tester, (h, f) async {
         h.selectHistoryRange(HistoryChart.temperature, HistoryRange.last6Hours);
         expect(h.historyRangeOf(HistoryChart.temperature), HistoryRange.last6Hours);
-        expect(h.historyRangeOf(HistoryChart.soilMoisture), HistoryRange.last24Hours);
+        expect(h.historyRangeOf(HistoryChart.soilMoisture), HistoryRange.today);
 
         h.selectHistoryRange(HistoryChart.temperature, HistoryRange.last12Hours);
         h.selectHistoryRange(HistoryChart.pump, HistoryRange.last6Hours);
         expect(h.historyRangeOf(HistoryChart.temperature), HistoryRange.last12Hours);
         expect(h.historyRangeOf(HistoryChart.pump), HistoryRange.last6Hours);
-        expect(h.historyRangeOf(HistoryChart.humidity), HistoryRange.last24Hours);
+        expect(h.historyRangeOf(HistoryChart.humidity), HistoryRange.today);
       });
+    });
+
+    testWidgets('exposes the current hour for the history windows', (tester) async {
+      await withHarness(tester, (h, f) async {
+        expect(h.currentHour, fixedNow.hour);
+      });
+    });
+
+    test('today spans midnight up to the current hour', () {
+      expect(HistoryRange.today.hoursEndingAt(0), [0]);
+      expect(HistoryRange.today.hoursEndingAt(10), [for (var h = 0; h <= 10; h++) h]);
+      expect(HistoryRange.today.hoursEndingAt(23), [for (var h = 0; h <= 23; h++) h]);
+    });
+
+    test('last N hours roll back from the current hour across midnight', () {
+      expect(HistoryRange.last6Hours.hoursEndingAt(10), [5, 6, 7, 8, 9, 10]);
+      expect(HistoryRange.last6Hours.hoursEndingAt(2), [21, 22, 23, 0, 1, 2]);
+      expect(HistoryRange.last12Hours.hoursEndingAt(10), [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      expect(HistoryRange.last24Hours.hoursEndingAt(10), [
+        for (var h = 11; h <= 23; h++) h,
+        for (var h = 0; h <= 10; h++) h,
+      ]);
+    });
+
+    test('history slots map index 0 to 1 AM and index 23 to 12 AM', () {
+      final history = SensorHistory(
+        readings: {
+          HistorySeries.surfaceMoisture: [
+            for (var i = 0; i < SensorHistory.hoursInWindow; i++) i * 1.0,
+          ],
+        },
+      );
+      expect(history.valueAt(HistorySeries.surfaceMoisture, 1), 0);
+      expect(history.valueAt(HistorySeries.surfaceMoisture, 0), 23);
+      expect(history.valueAt(HistorySeries.surfaceMoisture, 10), 9);
+      expect(history.valueAt(HistorySeries.pumpStatus, 10), isNull);
     });
   });
 
