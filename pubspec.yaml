@@ -16,7 +16,7 @@ dependencies:
   riverpod_annotation: ^4.0.7
   firebase_core: ^4.15.0
   firebase_database: ^12.6.0
-  firebase_auth: ^6.7.0
+#  firebase_auth: ^6.7.0
   intl: ^0.20.3
   flutter_svg: ^2.3.0
   fl_chart: ^1.2.0

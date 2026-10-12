@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../domain/entities/geo_point.dart';
@@ -12,6 +13,13 @@ class PlaceNameNominatimDataSource implements PlaceNameDataSource {
 
   @override
   Future<String> fetchPlaceName(GeoPoint point) async {
+    var headers = <String, dynamic>{
+      'Accept': 'application/json',
+    };
+
+    if(!kIsWeb){
+      headers = {NominatimKeys.userAgentHeader: AppStrings.appName};
+    }
     final response = await client.get<Object?>(
       NominatimKeys.reverseUrl,
       queryParameters: {
@@ -22,7 +30,7 @@ class PlaceNameNominatimDataSource implements PlaceNameDataSource {
         NominatimKeys.languageParam: NominatimKeys.languageEnglish,
       },
       options: Options(
-        headers: {NominatimKeys.userAgentHeader: AppStrings.appName},
+        headers: headers,
         validateStatus: (_) => true,
       ),
     );
