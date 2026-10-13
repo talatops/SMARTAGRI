@@ -6,7 +6,7 @@ abstract final class NominatimKeys {
   static const formatParam = 'format';
   static const zoomParam = 'zoom';
   static const languageParam = 'accept-language';
-  static const userAgentHeader = 'User-Agent';
+  // static const userAgentHeader = 'User-Agent';
 
   static const formatJson = 'json';
   static const zoomCity = '10';

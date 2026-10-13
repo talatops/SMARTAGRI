@@ -17,9 +17,9 @@ class PlaceNameNominatimDataSource implements PlaceNameDataSource {
       'Accept': 'application/json',
     };
 
-    if(!kIsWeb){
-      headers = {NominatimKeys.userAgentHeader: AppStrings.appName};
-    }
+    // if(!kIsWeb){
+    //   headers = {NominatimKeys.userAgentHeader: AppStrings.appName};
+    // }
     final response = await client.get<Object?>(
       NominatimKeys.reverseUrl,
       queryParameters: {
