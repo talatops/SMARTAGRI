@@ -12,5 +12,11 @@ class SensorHistory {
 
   List<double> valuesOf(HistorySeries series) => readings[series] ?? const [];
 
-  static int hourAt(int index) => (index + 1) % Duration.hoursPerDay;
+  double? valueAt(HistorySeries series, int hourOfDay) {
+    final values = valuesOf(series);
+    final index = indexOfHour(hourOfDay);
+    return index < values.length ? values[index] : null;
+  }
+
+  static int indexOfHour(int hourOfDay) => (hourOfDay - 1) % hoursInWindow;
 }

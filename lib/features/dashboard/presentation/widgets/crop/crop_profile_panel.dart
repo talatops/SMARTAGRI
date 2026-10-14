@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -15,12 +15,10 @@ import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/selectable_table.dart';
 import '../../../domain/entities/crop_profile.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 
 class CropProfilePanel extends StatelessWidget {
-  final DashboardController controller;
-
-  const CropProfilePanel({super.key, required this.controller});
+  const CropProfilePanel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +27,10 @@ class CropProfilePanel extends StatelessWidget {
       subtitle: AppStrings.cropSubtitle,
       icon: AppAssets.cropPanel,
       iconColor: AppColors.success,
-      child: Obx(() {
-        final crops = controller.crops;
-        final selected = controller.selectedCrop.value;
+      child: Consumer(builder: (context, ref, _) {
+        final (crops, selected) = ref.watch(
+          dashboardProvider.select((state) => (state.crops, state.selectedCrop)),
+        );
         if (crops.isEmpty || selected == null) {
           return const SizedBox.shrink();
         }
@@ -41,7 +40,7 @@ class CropProfilePanel extends StatelessWidget {
           columnFlex: const [5, 6],
           items: crops,
           selected: selected,
-          onSelect: controller.selectCrop,
+          onSelect: (crop) => ref.read(dashboardProvider.notifier).selectCrop(crop),
           fillHeight: !context.isMobileLayout,
           rowBuilder: (context, crop, isSelected, isHovered) =>
               CropRangeRow(crop: crop, isSelected: isSelected, isHovered: isHovered),

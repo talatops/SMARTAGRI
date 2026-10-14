@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/responsive_size_extension.dart';
 import '../../../../core/utils/app_dimensions.dart';
 import '../../../../core/widgets/base_scaffold.dart';
 import '../../../../core/widgets/constants.dart';
 import '../../../../core/widgets/max_width_container.dart';
-import '../controller/dashboard_controller.dart';
+import '../notifier/dashboard_notifier.dart';
 import '../widgets/composite/composite_moisture_panel.dart';
 import '../widgets/crop/crop_profile_panel.dart';
 import '../widgets/history/sensor_history_section.dart';
@@ -19,15 +19,17 @@ import '../widgets/soil/soil_metrics_panel.dart';
 import '../widgets/telemetry/field_telemetry_panel.dart';
 import '../widgets/weather/weather_status_panel.dart';
 
-class DashboardPage extends GetView<DashboardController> {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      body: Obx(() {
-        final snapshot = controller.snapshot.value;
-        if (controller.isLoading.value || snapshot == null) {
+      body: Consumer(builder: (context, ref, _) {
+        final (hasSnapshot, isLoading) = ref.watch(
+          dashboardProvider.select((state) => (state.snapshot != null, state.isLoading)),
+        );
+        if (isLoading || !hasSnapshot) {
           return const MaxWidthContainer(child: DashboardSkeleton());
         }
 
@@ -36,22 +38,19 @@ class DashboardPage extends GetView<DashboardController> {
             child: Column(
               children: [
                 HeightBox(height: AppDimensions.s16.h),
-                DashboardHeader(controller: controller),
+                DashboardHeader(),
                 HeightBox(height: AppDimensions.s16.h),
                 DashboardGrid(
-                  soilPanel: SoilMetricsPanel(
-                    readings: snapshot.soilReadings,
-                    waterLevel: snapshot.waterLevel,
-                  ),
-                  compositePanel: CompositeMoisturePanel(controller: controller),
-                  telemetryPanel: FieldTelemetryPanel(telemetry: snapshot.telemetry),
-                  irrigationPanel: IrrigationControlPanel(controller: controller),
-                  weatherPanel: WeatherStatusPanel(controller: controller),
-                  cropPanel: CropProfilePanel(controller: controller),
+                  soilPanel: SoilMetricsPanel(),
+                  compositePanel: CompositeMoisturePanel(),
+                  telemetryPanel: FieldTelemetryPanel(),
+                  irrigationPanel: IrrigationControlPanel(),
+                  weatherPanel: WeatherStatusPanel(),
+                  cropPanel: CropProfilePanel(),
                 ),
-                SensorHistorySection(controller: controller),
+                SensorHistorySection(),
                 HeightBox(height: AppDimensions.s16.h),
-                DashboardFooter(controller: controller),
+                DashboardFooter(),
               ],
             ),
           ),

@@ -8,12 +8,9 @@ class SizeConfig {
   SizeConfig._();
 
   static double screenWidth = AppDimensions.maxContentWidth;
-  static double screenHeight = 800;
 
   static void init(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    screenWidth = size.width;
-    screenHeight = size.height;
+    screenWidth = MediaQuery.sizeOf(context).width;
   }
 
   static DeviceType deviceTypeOf(double width) {
@@ -23,10 +20,6 @@ class SizeConfig {
   }
 
   static DeviceType get deviceType => deviceTypeOf(screenWidth);
-
-  static bool get isMobile => deviceType == DeviceType.mobile;
-  static bool get isTablet => deviceType == DeviceType.tablet;
-  static bool get isDesktop => deviceType == DeviceType.desktop;
 
   static double textScaleOf(DeviceType type) => switch (type) {
     DeviceType.desktop => 1.0,

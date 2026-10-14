@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/enums.dart';
@@ -8,7 +8,7 @@ import 'open_meteo_keys.dart';
 import 'weather_data_source.dart';
 
 class WeatherOpenMeteoDataSource implements WeatherDataSource {
-  final GetConnect client;
+  final Dio client;
 
   WeatherOpenMeteoDataSource({required this.client});
 
@@ -16,17 +16,18 @@ class WeatherOpenMeteoDataSource implements WeatherDataSource {
   Future<WeatherSnapshot> fetchCurrentWeather(GeoPoint point) async {
     final response = await client.get<Object?>(
       OpenMeteoKeys.forecastUrl,
-      query: {
+      queryParameters: {
         OpenMeteoKeys.latitudeParam: '${point.latitude}',
         OpenMeteoKeys.longitudeParam: '${point.longitude}',
         OpenMeteoKeys.currentParam: OpenMeteoKeys.currentFields.join(','),
         OpenMeteoKeys.timezoneParam: OpenMeteoKeys.timezoneAuto,
       },
+      options: Options(validateStatus: (_) => true),
     );
 
-    final body = response.body;
-    if (!response.isOk || body is! Map) {
-      throw Exception(response.statusText ?? AppStrings.weatherUnavailable);
+    final body = response.data;
+    if (!_isOk(response.statusCode) || body is! Map) {
+      throw Exception(response.statusMessage ?? AppStrings.weatherUnavailable);
     }
 
     final current = body[OpenMeteoKeys.current];
@@ -41,6 +42,8 @@ class WeatherOpenMeteoDataSource implements WeatherDataSource {
       humidityPercent: _double(current[OpenMeteoKeys.humidity]),
     );
   }
+
+  bool _isOk(int? statusCode) => statusCode != null && statusCode >= 200 && statusCode <= 299;
 
   double _double(Object? value) => value is num ? value.toDouble() : 0;
 

@@ -1,0 +1,17 @@
+# MIME types for Flutter's wasm build (the server defaults them to text/plain).
+AddType application/javascript .mjs .js
+AddType application/wasm .wasm
+AddType application/json .json
+
+# go_router: send unknown paths to index.html so refreshes and deep links work.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+<IfModule mod_headers.c>
+  # Always revalidate entry files so users pick up new deployments.
+  <FilesMatch "^(index\.html|flutter_bootstrap\.js|flutter_service_worker\.js|version\.json|main\.dart\.(js|mjs|wasm))$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

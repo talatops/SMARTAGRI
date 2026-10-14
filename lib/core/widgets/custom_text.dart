@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_fonts.dart';
@@ -64,7 +63,7 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = text.tr;
+    final value = text;
     final inherited = DefaultTextStyle.of(context).style.merge(this.style);
     final scale = scaleWithScreen ? context.appTextScale : 1.0;
 

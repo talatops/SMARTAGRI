@@ -62,7 +62,6 @@ abstract final class AppStrings {
   static const weatherSubtitle = 'External weather forecast';
   static const partlyCloudy = 'Partly Cloudy';
   static const raining = 'Raining';
-  static const noRain = 'No Rain';
   static const rainForecast = 'Rain Forecast';
   static const windSpeed = 'Wind Speed';
   static const humidity = 'Humidity';
@@ -120,9 +119,11 @@ abstract final class AppStrings {
   static const historyPumpTitle = 'Pump ON/OFF History';
   static const historyPumpSubtitle = 'Irrigation pump status';
   static const historyRangeTooltip = 'Select time range';
+  static const today = 'Today';
   static const last6Hours = 'Last 6 Hours';
   static const last12Hours = 'Last 12 Hours';
   static const last24Hours = 'Last 24 Hours';
+  static const timeAxisToday = 'Time (Today)';
   static const timeAxis6Hours = 'Time (6 Hours)';
   static const timeAxis12Hours = 'Time (12 Hours)';
   static const timeAxis24Hours = 'Time (24 Hours)';

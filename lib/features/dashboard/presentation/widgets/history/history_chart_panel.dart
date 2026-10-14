@@ -17,6 +17,7 @@ import 'history_line_chart.dart';
 class HistoryChartPanel extends StatelessWidget {
   final HistoryChart chart;
   final SensorHistory history;
+  final int currentHour;
   final HistoryRange range;
   final ValueChanged<HistoryRange> onRangeSelected;
 
@@ -24,6 +25,7 @@ class HistoryChartPanel extends StatelessWidget {
     super.key,
     required this.chart,
     required this.history,
+    required this.currentHour,
     required this.range,
     required this.onRangeSelected,
   });
@@ -38,7 +40,12 @@ class HistoryChartPanel extends StatelessWidget {
           );
     final lineChart = SizedBox(
       height: chartHeight,
-      child: HistoryLineChart(chart: chart, history: history, range: range),
+      child: HistoryLineChart(
+        chart: chart,
+        history: history,
+        range: range,
+        hours: range.hoursEndingAt(currentHour),
+      ),
     );
     final legend = _Legend(series: chart.series);
     final rangeMenu = _RangeMenu(selected: range, onSelected: onRangeSelected);

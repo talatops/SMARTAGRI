@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -13,16 +13,14 @@ import '../../../../../core/utils/formatters.dart';
 import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/hover_region.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 
 class DashboardFooter extends StatelessWidget {
-  final DashboardController controller;
-
-  const DashboardFooter({super.key, required this.controller});
+  const DashboardFooter({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final left = _LastUpdated(controller: controller);
+    final left = _LastUpdated();
     final right = const _Branding();
 
     return Column(
@@ -47,18 +45,17 @@ class DashboardFooter extends StatelessWidget {
 }
 
 class _LastUpdated extends StatelessWidget {
-  final DashboardController controller;
-
-  const _LastUpdated({required this.controller});
+  const _LastUpdated();
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final updated = controller.lastUpdated.value;
-      final spinning = controller.isRefreshing.value;
+    return Consumer(builder: (context, ref, _) {
+      final (updated, spinning) = ref.watch(
+        dashboardProvider.select((state) => (state.lastUpdated, state.isRefreshing)),
+      );
 
       return HoverRegion(
-        onTap: () => controller.loadDashboard(isRefresh: true),
+        onTap: () => ref.read(dashboardProvider.notifier).loadDashboard(isRefresh: true),
         builder: (context, hovered) => Row(
           mainAxisSize: MainAxisSize.min,
           children: [

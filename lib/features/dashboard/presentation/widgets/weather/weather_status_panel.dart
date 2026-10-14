@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -15,13 +15,11 @@ import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/labeled_value.dart';
 import '../../../../../core/widgets/shimmer.dart';
 import '../../../../../core/widgets/vertical_divider_line.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 import 'weather_illustration.dart';
 
 class WeatherStatusPanel extends StatelessWidget {
-  final DashboardController controller;
-
-  const WeatherStatusPanel({super.key, required this.controller});
+  const WeatherStatusPanel({super.key});
 
   Widget _maybeExpand(BuildContext context, Widget child) =>
       context.isMobileLayout ? child : Expanded(child: Center(child: child));
@@ -33,10 +31,24 @@ class WeatherStatusPanel extends StatelessWidget {
       subtitle: AppStrings.weatherSubtitle,
       icon: AppAssets.weatherPanel,
       iconColor: AppColors.cyan,
-      child: Obx(() {
-        final placeholder = controller.showWeatherPlaceholder;
-        if (!placeholder && controller.weatherLocationIssue != null) {
-          return _LocationPrompt(controller: controller);
+      child: Consumer(builder: (context, ref, _) {
+        final (placeholder, issue, temperature, condition, icon, rainChance, wind, humidity) =
+            ref.watch(
+              dashboardProvider.select(
+                (state) => (
+                  state.showWeatherPlaceholder,
+                  state.weatherLocationIssue,
+                  state.weatherTemperatureLabel,
+                  state.weatherConditionLabel,
+                  state.weatherIcon,
+                  state.weatherRainChanceLabel,
+                  state.weatherWindLabel,
+                  state.weatherHumidityLabel,
+                ),
+              ),
+            );
+        if (!placeholder && issue != null) {
+          return _LocationPrompt();
         }
         final valuePlaceholder = placeholder
             ? ShimmerBox(
@@ -66,7 +78,7 @@ class WeatherStatusPanel extends StatelessWidget {
                           )
                         else
                           CustomText(
-                            text: controller.weatherTemperatureLabel,
+                            text: temperature,
                             style: AppTextStyles.metricValueXL,
                             maxLines: 1,
                             autoManageSize: true,
@@ -80,7 +92,7 @@ class WeatherStatusPanel extends StatelessWidget {
                           )
                         else
                           CustomText(
-                            text: controller.weatherConditionLabel,
+                            text: condition,
                             style: AppTextStyles.tileLabel,
                             fontSize: 15,
                             fontColor: AppColors.cyan,
@@ -92,7 +104,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     ),
                   ),
                   WeatherIllustration(
-                    icon: controller.weatherIcon,
+                    icon: icon,
                     size: context.adaptive<double>(mobile: 78, tablet: 80, desktop: 96),
                   ),
                 ],
@@ -109,7 +121,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     child: LabeledValue(
                       icon: AppAssets.droplet,
                       iconColor: AppColors.cyan,
-                      value: controller.weatherRainChanceLabel,
+                      value: rainChance,
                       label: AppStrings.rainForecast,
                       valuePlaceholder: valuePlaceholder,
                     ),
@@ -119,7 +131,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     child: LabeledValue(
                       icon: AppAssets.wind,
                       iconColor: AppColors.textSecondary,
-                      value: controller.weatherWindLabel,
+                      value: wind,
                       label: AppStrings.windSpeed,
                       valuePlaceholder: valuePlaceholder,
                     ),
@@ -129,7 +141,7 @@ class WeatherStatusPanel extends StatelessWidget {
                     child: LabeledValue(
                       icon: AppAssets.droplet,
                       iconColor: AppColors.cyan,
-                      value: controller.weatherHumidityLabel,
+                      value: humidity,
                       label: AppStrings.humidity,
                       valuePlaceholder: valuePlaceholder,
                     ),
@@ -146,13 +158,15 @@ class WeatherStatusPanel extends StatelessWidget {
   }
 }
 
-class _LocationPrompt extends StatelessWidget {
-  final DashboardController controller;
-
-  const _LocationPrompt({required this.controller});
+class _LocationPrompt extends ConsumerWidget {
+  const _LocationPrompt();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final (message, actionLabel) = ref.watch(
+      dashboardProvider.select((state) => (state.locationIssueMessage, state.locationActionLabel)),
+    );
+
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: AppDimensions.s16.h),
@@ -166,16 +180,16 @@ class _LocationPrompt extends StatelessWidget {
             ),
             HeightBox(height: AppDimensions.s12.h),
             CustomText(
-              text: controller.locationIssueMessage,
+              text: message,
               style: AppTextStyles.bodyText,
               textAlign: TextAlign.center,
               maxLines: 3,
             ),
             HeightBox(height: AppDimensions.s16.h),
             AppActionButton(
-              label: controller.locationActionLabel,
+              label: actionLabel,
               icon: AppAssets.locationPin,
-              onTap: controller.resolveLocationIssue,
+              onTap: () => ref.read(dashboardProvider.notifier).resolveLocationIssue(),
             ),
           ],
         ),

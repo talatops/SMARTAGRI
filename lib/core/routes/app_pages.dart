@@ -1,15 +1,17 @@
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../features/dashboard/presentation/bindings/dashboard_binding.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
-  static final routes = <GetPage<dynamic>>[
-    GetPage(
-      name: AppRoutes.dashboard,
-      page: () => const DashboardPage(),
-      binding: DashboardBinding(),
-    ),
-  ];
+  static final router = GoRouter(
+    initialLocation: AppRoutes.dashboard,
+    onException: (context, state, router) => router.go(AppRoutes.dashboard),
+    routes: [
+      GoRoute(
+        path: AppRoutes.dashboard,
+        builder: (context, state) => const DashboardPage(),
+      ),
+    ],
+  );
 }

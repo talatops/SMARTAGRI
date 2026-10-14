@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -14,55 +15,58 @@ import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/metric_tile.dart';
 import '../../../../../core/widgets/status_pill.dart';
-import '../../../domain/entities/field_telemetry.dart';
+import '../../notifier/dashboard_notifier.dart';
 
 class FieldTelemetryPanel extends StatelessWidget {
-  final FieldTelemetry telemetry;
-
-  const FieldTelemetryPanel({super.key, required this.telemetry});
+  const FieldTelemetryPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final tiles = <Widget>[
-      _TelemetryMetric(
-        icon: AppAssets.thermometer,
-        iconColor: AppColors.amber,
-        label: AppStrings.temperature,
-        value: Formatters.temperature(telemetry.temperatureC),
-        status: telemetry.temperatureStatus,
-      ),
-      _TelemetryMetric(
-        icon: AppAssets.droplet,
-        iconColor: AppColors.cyan,
-        label: AppStrings.relativeHumidity,
-        value: Formatters.percent(telemetry.humidityPercent, decimals: 0),
-        status: telemetry.humidityStatus,
-      ),
-    ];
-    final gap = AppDimensions.s10.w;
-
     return AppCard(
       title: AppStrings.telemetryTitle,
       subtitle: AppStrings.telemetrySubtitle,
       icon: AppAssets.telemetryPanel,
       iconColor: AppColors.primaryBlue,
-      child: context.isMobileLayout
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                tiles[0],
-                SizedBox(height: gap),
-                tiles[1],
-              ],
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: tiles[0]),
-                SizedBox(width: gap),
-                Expanded(child: tiles[1]),
-              ],
-            ),
+      child: Consumer(builder: (context, ref, _) {
+        final telemetry = ref.watch(dashboardProvider.select((state) => state.snapshot?.telemetry));
+        if (telemetry == null) return const SizedBox.shrink();
+
+        final tiles = <Widget>[
+          _TelemetryMetric(
+            icon: AppAssets.thermometer,
+            iconColor: AppColors.amber,
+            label: AppStrings.temperature,
+            value: Formatters.temperature(telemetry.temperatureC),
+            status: telemetry.temperatureStatus,
+          ),
+          _TelemetryMetric(
+            icon: AppAssets.droplet,
+            iconColor: AppColors.cyan,
+            label: AppStrings.relativeHumidity,
+            value: Formatters.percent(telemetry.humidityPercent, decimals: 0),
+            status: telemetry.humidityStatus,
+          ),
+        ];
+        final gap = AppDimensions.s10.w;
+
+        return context.isMobileLayout
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  tiles[0],
+                  SizedBox(height: gap),
+                  tiles[1],
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: tiles[0]),
+                  SizedBox(width: gap),
+                  Expanded(child: tiles[1]),
+                ],
+              );
+      }),
     );
   }
 }

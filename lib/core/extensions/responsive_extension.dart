@@ -11,10 +11,8 @@ extension ResponsiveContext on BuildContext {
   bool get isMobileLayout => appDevice == DeviceType.mobile;
   bool get isTabletLayout => appDevice == DeviceType.tablet;
   bool get isDesktopLayout => appDevice == DeviceType.desktop;
-  bool get isCompactLayout => !isDesktopLayout;
 
   double get appTextScale => SizeConfig.textScaleOf(appDevice);
-  double get appSpaceScale => SizeConfig.spaceScaleOf(appDevice);
 
   double get appPageGutter =>
       isMobileLayout ? AppDimensions.pageGutterMobile : AppDimensions.pageGutterDesktop;

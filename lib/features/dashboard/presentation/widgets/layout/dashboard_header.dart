@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -14,18 +14,15 @@ import '../../../../../core/widgets/constants.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/shimmer.dart';
 import '../../../../../core/widgets/vertical_divider_line.dart';
-import '../../controller/dashboard_controller.dart';
+import '../../notifier/dashboard_notifier.dart';
 
 class DashboardHeader extends StatelessWidget {
-  final DashboardController controller;
-
-  const DashboardHeader({super.key, required this.controller});
+  const DashboardHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     final brand = _Brand();
     final meta = _Meta(
-      controller: controller,
       fitWidth: context.isTabletLayout,
       stacked: context.isMobileLayout,
     );
@@ -124,11 +121,10 @@ class _Tagline extends StatelessWidget {
 }
 
 class _Meta extends StatelessWidget {
-  final DashboardController controller;
   final bool fitWidth;
   final bool stacked;
 
-  const _Meta({required this.controller, this.fitWidth = false, this.stacked = false});
+  const _Meta({this.fitWidth = false, this.stacked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -149,9 +145,9 @@ class _Meta extends StatelessWidget {
       );
     }
 
-    Widget locationItem() {
-      if (!controller.showLocationPlaceholder) {
-        return item(AppAssets.locationPin, controller.locationLabel, shrink: fitWidth || stacked);
+    Widget locationItem(bool showPlaceholder, String locationLabel) {
+      if (!showPlaceholder) {
+        return item(AppAssets.locationPin, locationLabel, shrink: fitWidth || stacked);
       }
 
       return Row(
@@ -169,8 +165,12 @@ class _Meta extends StatelessWidget {
       );
     }
 
-    return Obx(() {
-      final now = controller.now.value;
+    return Consumer(builder: (context, ref, _) {
+      final (now, showPlaceholder, locationLabel) = ref.watch(
+        dashboardProvider.select(
+          (state) => (state.now, state.showLocationPlaceholder, state.locationLabel),
+        ),
+      );
 
       if (stacked) {
         return Column(
@@ -187,7 +187,7 @@ class _Meta extends StatelessWidget {
               ],
             ),
             HeightBox(height: AppDimensions.s8.h),
-            locationItem(),
+            locationItem(showPlaceholder, locationLabel),
           ],
         );
       }
@@ -204,7 +204,7 @@ class _Meta extends StatelessWidget {
             WidthBox(width: AppDimensions.s12.w),
             const VerticalDividerLine(height: 20),
             WidthBox(width: AppDimensions.s12.w),
-            Flexible(child: locationItem()),
+            Flexible(child: locationItem(showPlaceholder, locationLabel)),
           ],
         );
       }
@@ -218,7 +218,7 @@ class _Meta extends StatelessWidget {
           const VerticalDividerLine(height: 20),
           item(AppAssets.clock, Formatters.time(now)),
           const VerticalDividerLine(height: 20),
-          locationItem(),
+          locationItem(showPlaceholder, locationLabel),
         ],
       );
     });
