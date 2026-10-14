@@ -1,0 +1,26 @@
+services:
+  smart-agri-web:
+    container_name: ${CONTAINER_NAME:-smart_agri_system_web}
+    image: ${IMAGE_NAME:-smart-agri-web}:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        FLUTTER_VERSION: ${FLUTTER_VERSION:-3.47.6}
+        FLUTTER_CHANNEL: ${FLUTTER_CHANNEL:-stable}
+        FLUTTER_SHA256: ${FLUTTER_SHA256:-}
+        BUILD_FLAGS: ${BUILD_FLAGS:---release --wasm}
+        ENV_HASH: ${ENV_HASH:-none}
+      secrets:
+        - app_env
+    ports:
+      - "${HOST_PORT:-3001}:80"
+    environment:
+      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-_}
+      TRUSTED_PROXY_CIDR: ${TRUSTED_PROXY_CIDR:-0.0.0.0/0}
+      STATIC_CACHE_DAYS: ${STATIC_CACHE_DAYS:-30}
+    restart: unless-stopped
+
+secrets:
+  app_env:
+    file: ./.env

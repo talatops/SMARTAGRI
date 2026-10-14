@@ -1,0 +1,16 @@
+.git
+.gitea
+.dart_tool
+build
+android
+ios
+macos
+linux
+windows
+.idea
+.vscode
+*.md
+Dockerfile
+docker-compose.yml
+.env
+.env.*

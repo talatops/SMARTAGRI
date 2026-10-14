@@ -1,0 +1,90 @@
+name: Deploy SMART AGRI SYSTEM
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Only one deploy at a time (delete this block if your Gitea version rejects it)
+concurrency:
+  group: deploy-smart-agri
+  cancel-in-progress: false
+
+env:
+  COMPOSE_PROJECT_NAME: smartagri
+  CONTAINER_NAME: smart_agri_system_web
+  IMAGE_NAME: smart-agri-web
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: sh
+
+    steps:
+      - name: Install git, Docker CLI & Compose, curl
+        run: apk update && apk add --no-cache git docker-cli docker-cli-compose curl
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: |
+          {
+            echo "FLUTTER_VERSION=3.47.6"
+            echo "FLUTTER_CHANNEL=stable"
+            echo "FLUTTER_SHA256=f1631b9c2c8b3529323db412b0d1beacf4a748f8783b0d7cf599a8fd5f461675"
+            echo "BUILD_FLAGS=--release --wasm"
+            echo "HOST_PORT=3001"
+            echo "NGINX_SERVER_NAME=localhost"
+            echo "TRUSTED_PROXY_CIDR=0.0.0.0/0"
+            echo "STATIC_CACHE_DAYS=30"
+          } > .env
+          for k in FLUTTER_VERSION BUILD_FLAGS HOST_PORT; do
+            grep -q "^$k=" .env || { echo "Missing $k in .env"; exit 1; }
+          done
+          # lets the build cache notice when only the env values changed
+          printf 'ENV_HASH=%s\n' "$(sha256sum .env | cut -d' ' -f1)" >> .env
+          docker compose config -q && echo "compose file OK"
+
+      - name: Remember current image for rollback
+        run: docker tag "$IMAGE_NAME:latest" "$IMAGE_NAME:previous" 2>/dev/null || echo "no previous image"
+
+      - name: Build image
+        run: |
+          docker compose build --pull
+          docker tag "$IMAGE_NAME:$IMAGE_TAG" "$IMAGE_NAME:latest"
+
+      - name: Deploy
+        run: docker compose up -d --remove-orphans
+
+      - name: Wait for healthy container
+        run: |
+          for i in $(seq 1 30); do
+            s=$(docker inspect -f '{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo none)
+            echo "health: $s"
+            [ "$s" = "healthy" ] && exit 0
+            sleep 2
+          done
+          docker logs --tail 50 "$CONTAINER_NAME" || true
+          exit 1
+
+      - name: Roll back on failure
+        if: failure()
+        run: |
+          if docker image inspect "$IMAGE_NAME:previous" >/dev/null 2>&1; then
+            echo "Rolling back to previous image"
+            IMAGE_TAG=previous docker compose up -d --no-build
+          else
+            echo "No previous image to roll back to"
+          fi
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -f .env
+          docker image prune -f
+          docker builder prune -f --filter "until=168h"
