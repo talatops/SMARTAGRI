@@ -31,7 +31,6 @@ abstract final class AppAssets {
   static const wind = Icons.air_rounded;
   static const checkCircle = Icons.check_circle_rounded;
   static const power = Icons.power_settings_new_rounded;
-  static const aiPrediction = Icons.auto_awesome;
 
   static const cropWheat = Icons.grass_rounded;
   static const cropRice = Icons.spa_rounded;
@@ -41,6 +40,7 @@ abstract final class AppAssets {
 
   static const iradaLogoSvg = 'assets/irada_logo.svg';
   static const iradaLogoPng = 'assets/irada_logo.png';
+  static const aiPredictionSvg = 'assets/icons/ai_prediction.svg';
 
   static const _weather = 'assets/icons/weather';
   static const weatherClearDay = '$_weather/clear_day.svg';
