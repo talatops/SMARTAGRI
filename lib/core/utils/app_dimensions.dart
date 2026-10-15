@@ -65,9 +65,9 @@ abstract final class AppDimensions {
   static const double bpTablet = 768;
 
   static const double rowOneHeightDesktop = 322;
-  static const double rowTwoHeightDesktop = 336;
+  static const double rowTwoHeightDesktop = 396;
   static const double rowOneHeightTablet = 472;
-  static const double rowTwoHeightTablet = 344;
+  static const double rowTwoHeightTablet = 404;
   static const double soilTileRowHeightMobile = 196;
   static const double soilTileRowHeightTablet = 178;
 

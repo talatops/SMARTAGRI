@@ -143,6 +143,12 @@ class DashboardState {
 
   String get pumpButtonLabel => isPumpCommandOn ? AppStrings.pumpOn : AppStrings.pumpOff;
 
+  String? get _irrigationNeed => snapshot?.irrigation.irrigationNeed;
+
+  String get irrigationNeedLabel => _irrigationNeed?.toUpperCase() ?? AppStrings.noValue;
+
+  IrrigationNeed get irrigationNeed => IrrigationNeed.fromLabel(_irrigationNeed);
+
   bool get showWeatherPlaceholder => weather == null && (isWeatherLoading || isLocationLoading);
 
   LocationIssue? get weatherLocationIssue => coordinates == null ? locationIssue : null;

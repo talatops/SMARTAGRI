@@ -45,6 +45,8 @@ class IrrigationControlPanel extends StatelessWidget {
             _PumpRow()
           else
             Expanded(child: _PumpRow()),
+          HeightBox(height: AppDimensions.s14.h),
+          const _PredictionTile(),
         ],
       ),
     );
@@ -161,5 +163,66 @@ class _PumpStatusBlock extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class _PredictionTile extends StatelessWidget {
+  const _PredictionTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return MetricTile(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimensions.s14.w,
+        vertical: AppDimensions.s10.h,
+      ),
+      child: Row(
+        children: [
+          Icon(AppAssets.aiPrediction, size: 22.r, color: AppColors.primaryBlue),
+          WidthBox(width: AppDimensions.s12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomText(
+                  text: AppStrings.aiPrediction,
+                  style: AppTextStyles.tileSubLabel,
+                  letterSpacing: 0.6,
+                  maxLines: 1,
+                ),
+                HeightBox(height: AppDimensions.s4.h),
+                Consumer(builder: (context, ref, _) {
+                  final (label, need) = ref.watch(
+                    dashboardProvider.select(
+                      (state) => (state.irrigationNeedLabel, state.irrigationNeed),
+                    ),
+                  );
+                  return Row(
+                    children: [
+                      CustomText(
+                        text: AppStrings.irrigationNeedLabel,
+                        style: AppTextStyles.tileLabel,
+                        maxLines: 1,
+                      ),
+                      WidthBox(width: AppDimensions.s6.w),
+                      Flexible(
+                        child: CustomText(
+                          text: label,
+                          style: AppTextStyles.pillLabelLarge,
+                          fontColor: need.color,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

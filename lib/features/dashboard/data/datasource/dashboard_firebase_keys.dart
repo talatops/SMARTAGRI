@@ -7,6 +7,10 @@ abstract final class DashboardFirebaseKeys {
   static const pumpCommand = 'pump_command';
   static const pumpStatus = 'pump_status';
 
+  static const prediction = 'prediction';
+  static const predictionOutput = 'output';
+  static const irrigationNeed = 'irrigation_need';
+
   static const sensors = 'sensors';
   static const compositeMoisture = 'composite_moisture';
   static const humidity = 'humidity';

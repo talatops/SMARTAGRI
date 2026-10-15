@@ -57,6 +57,8 @@ abstract final class AppStrings {
   static const off = 'OFF';
   static const pumpDisabled = 'Pump is currently disabled';
   static const pumpEnabled = 'Pump is currently running';
+  static const aiPrediction = 'AI PREDICTION';
+  static const irrigationNeedLabel = 'Irrigation need:';
 
   static const weatherTitle = 'Weather Status';
   static const weatherSubtitle = 'External weather forecast';
