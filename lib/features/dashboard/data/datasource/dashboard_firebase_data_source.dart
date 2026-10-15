@@ -65,6 +65,9 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
     final control = _map(device[DashboardFirebaseKeys.control]);
     final sensors = _map(device[DashboardFirebaseKeys.sensors]);
     final weather = _map(device[DashboardFirebaseKeys.weather]);
+    final prediction = _map(
+      _map(device[DashboardFirebaseKeys.prediction])[DashboardFirebaseKeys.predictionOutput],
+    );
 
     final soilReadings = base.soilReadings.map((reading) {
       final key = switch (reading.depth) {
@@ -122,6 +125,7 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
         isPumpCommandOn:
             _bool(control[DashboardFirebaseKeys.pumpCommand]) ?? base.irrigation.isPumpCommandOn,
         isPumpOn: _bool(control[DashboardFirebaseKeys.pumpStatus]) ?? base.irrigation.isPumpOn,
+        irrigationNeed: _text(prediction[DashboardFirebaseKeys.irrigationNeed]),
       ),
       lastUpdated: clock(),
       location: base.location,
@@ -134,6 +138,11 @@ class DashboardFirebaseDataSource implements DashboardDataSource {
   double? _double(Object? value) => value is num ? value.toDouble() : null;
 
   bool? _bool(Object? value) => value is bool ? value : null;
+
+  String? _text(Object? value) {
+    final text = value is String || value is num || value is bool ? '$value'.trim() : '';
+    return text.isEmpty ? null : text;
+  }
 
   PumpMode? _pumpMode(Object? value) {
     if (value is! String) return null;

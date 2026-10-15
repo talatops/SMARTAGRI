@@ -57,7 +57,7 @@ class _AppLoaderState extends State<AppLoader> with TickerProviderStateMixin {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              AppAssets.iradaLogo,
+              AppAssets.iradaLogoSvg,
               width: AppDimensions.loaderBrandWidth,
               filterQuality: FilterQuality.medium,
             ),

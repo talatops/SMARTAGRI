@@ -37,6 +37,24 @@ enum PumpMode {
   bool get isManual => this == PumpMode.manual;
 }
 
+enum IrrigationNeed {
+  low(AppColors.success),
+  medium(AppColors.cyan),
+  high(AppColors.amber),
+  unknown(AppColors.textPrimary);
+
+  final Color color;
+  const IrrigationNeed(this.color);
+
+  static IrrigationNeed fromLabel(String? label) {
+    final value = label?.toLowerCase() ?? '';
+    if (value.contains('high')) return IrrigationNeed.high;
+    if (value.contains('medium') || value.contains('moderate')) return IrrigationNeed.medium;
+    if (value.contains('low')) return IrrigationNeed.low;
+    return IrrigationNeed.unknown;
+  }
+}
+
 enum CropType {
   wheat(AppStrings.wheat),
   rice(AppStrings.rice),

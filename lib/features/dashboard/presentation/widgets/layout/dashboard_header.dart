@@ -66,7 +66,7 @@ class _Brand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logo = Image.asset(
-      AppAssets.iradaLogo,
+      AppAssets.iradaLogoPng,
       height: AppDimensions.headerLogoHeight.r,
       filterQuality: FilterQuality.medium,
     );
