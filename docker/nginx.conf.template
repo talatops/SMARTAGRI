@@ -13,12 +13,18 @@ server {
 
     location = /healthz {
         access_log off;
+        default_type text/plain;
         return 200 "ok\n";
-        add_header Content-Type text/plain;
+    }
+
+    # Entry page: never cache, and (temporarily) make browsers drop old cached files.
+    # Remove the Clear-Site-Data line about a week after the first deploy.
+    location = /index.html {
+        add_header Cache-Control "no-cache";
+        add_header Clear-Site-Data '"cache"' always;
     }
 
     # Files that decide which build loads: never cache
-    location = /index.html                { add_header Cache-Control "no-cache"; }
     location = /flutter_bootstrap.js      { add_header Cache-Control "no-cache"; }
     location = /flutter_service_worker.js { add_header Cache-Control "no-cache"; }
     location = /flutter.js                { add_header Cache-Control "no-cache"; }
