@@ -17,14 +17,8 @@ server {
         return 200 "ok\n";
     }
 
-    # Entry page: never cache, and (temporarily) make browsers drop old cached files.
-    # Remove the Clear-Site-Data line about a week after the first deploy.
-    location = /index.html {
-        add_header Cache-Control "no-cache";
-        add_header Clear-Site-Data '"cache"' always;
-    }
-
-    # Files that decide which build loads: never cache
+    # Entry page and files that decide which build loads: always revalidate
+    location = /index.html                { add_header Cache-Control "no-cache"; }
     location = /flutter_bootstrap.js      { add_header Cache-Control "no-cache"; }
     location = /flutter_service_worker.js { add_header Cache-Control "no-cache"; }
     location = /flutter.js                { add_header Cache-Control "no-cache"; }
@@ -37,7 +31,17 @@ server {
         add_header Cache-Control "no-cache";
     }
 
-    # Everything else can be cached
+    # Flutter engine files: revalidate (cheap 304 when unchanged)
+    location ^~ /canvaskit/ {
+        add_header Cache-Control "no-cache";
+    }
+
+    # Per-build manifests: must match the current build
+    location ~ ^/assets/(AssetManifest\.(json|bin|bin\.json)|FontManifest\.json|NOTICES)$ {
+        add_header Cache-Control "no-cache";
+    }
+
+    # Images, fonts, styles: cached in the browser
     location ~* \.(css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|otf)$ {
         expires ${STATIC_CACHE_DAYS}d;
         add_header Cache-Control "public, no-transform";
