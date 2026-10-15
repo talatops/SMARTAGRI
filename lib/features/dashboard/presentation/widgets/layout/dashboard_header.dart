@@ -21,7 +21,7 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brand = _Brand();
+    final brand = _Brand(stacked: context.isMobileLayout);
     final meta = _Meta(
       fitWidth: context.isTabletLayout,
       stacked: context.isMobileLayout,
@@ -59,36 +59,63 @@ class DashboardHeader extends StatelessWidget {
 }
 
 class _Brand extends StatelessWidget {
+  final bool stacked;
+
+  const _Brand({this.stacked = false});
+
   @override
   Widget build(BuildContext context) {
+    final logo = Image.asset(
+      AppAssets.iradaLogo,
+      height: AppDimensions.headerLogoHeight.r,
+      filterQuality: FilterQuality.medium,
+    );
+    final title = _Title();
+
+    if (stacked) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          logo,
+          HeightBox(height: AppDimensions.s10.h),
+          title,
+        ],
+      );
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(AppAssets.logo, color: AppColors.success, size: 32.r),
-        WidthBox(width: AppDimensions.s10.w),
-        Builder(
-          builder: (context) {
-            final base = AppTextStyles.appTitle.copyWith(
-              fontFamily: AppFonts.primary,
-              fontSize: AppTextStyles.appTitle.fontSize!.sp,
-            );
-            return RichText(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                style: base,
-                children: [
-                  TextSpan(text: '${AppStrings.appNamePrefix} '),
-                  TextSpan(
-                    text: AppStrings.appNameSuffix,
-                    style: base.copyWith(color: AppColors.success),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+        logo,
+        WidthBox(width: AppDimensions.s20.w),
+        const VerticalDividerLine(height: 30),
+        WidthBox(width: AppDimensions.s20.w),
+        title,
       ],
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final base = AppTextStyles.appTitle.copyWith(
+      fontFamily: AppFonts.primary,
+      fontSize: AppTextStyles.appTitle.fontSize!.sp,
+    );
+    return RichText(
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: base,
+        children: [
+          TextSpan(text: '${AppStrings.appNamePrefix} '),
+          TextSpan(
+            text: AppStrings.appNameSuffix,
+            style: base.copyWith(color: AppColors.success),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -103,18 +130,33 @@ class _Tagline extends StatelessWidget {
       child: Container(
         width: 4.r,
         height: 4.r,
-        decoration: const BoxDecoration(color: AppColors.textTertiary, shape: BoxShape.circle),
+        decoration: const BoxDecoration(
+          color: AppColors.textTertiary,
+          shape: BoxShape.circle,
+        ),
       ),
     );
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(text: AppStrings.tagline1, style: AppTextStyles.tagline, maxLines: 1),
+        CustomText(
+          text: AppStrings.tagline1,
+          style: AppTextStyles.tagline,
+          maxLines: 1,
+        ),
         dot(),
-        CustomText(text: AppStrings.tagline2, style: AppTextStyles.tagline, maxLines: 1),
+        CustomText(
+          text: AppStrings.tagline2,
+          style: AppTextStyles.tagline,
+          maxLines: 1,
+        ),
         dot(),
-        CustomText(text: AppStrings.tagline3, style: AppTextStyles.tagline, maxLines: 1),
+        CustomText(
+          text: AppStrings.tagline3,
+          style: AppTextStyles.tagline,
+          maxLines: 1,
+        ),
       ],
     );
   }
@@ -147,7 +189,11 @@ class _Meta extends StatelessWidget {
 
     Widget locationItem(bool showPlaceholder, String locationLabel) {
       if (!showPlaceholder) {
-        return item(AppAssets.locationPin, locationLabel, shrink: fitWidth || stacked);
+        return item(
+          AppAssets.locationPin,
+          locationLabel,
+          shrink: fitWidth || stacked,
+        );
       }
 
       return Row(
@@ -165,62 +211,65 @@ class _Meta extends StatelessWidget {
       );
     }
 
-    return Consumer(builder: (context, ref, _) {
-      final (now, showPlaceholder, locationLabel) = ref.watch(
-        dashboardProvider.select(
-          (state) => (state.now, state.showLocationPlaceholder, state.locationLabel),
-        ),
-      );
+    return Consumer(
+      builder: (context, ref, _) {
+        final (now, showPlaceholder, locationLabel) = ref.watch(
+          dashboardProvider.select(
+            (state) =>
+                (state.now, state.showLocationPlaceholder, state.locationLabel),
+          ),
+        );
 
-      if (stacked) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+        if (stacked) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  item(AppAssets.calendar, Formatters.date(now)),
+                  WidthBox(width: AppDimensions.s12.w),
+                  const VerticalDividerLine(height: 16),
+                  WidthBox(width: AppDimensions.s12.w),
+                  item(AppAssets.clock, Formatters.time(now)),
+                ],
+              ),
+              HeightBox(height: AppDimensions.s8.h),
+              locationItem(showPlaceholder, locationLabel),
+            ],
+          );
+        }
+
+        if (fitWidth) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              item(AppAssets.calendar, Formatters.date(now)),
+              WidthBox(width: AppDimensions.s12.w),
+              const VerticalDividerLine(height: 20),
+              WidthBox(width: AppDimensions.s12.w),
+              item(AppAssets.clock, Formatters.time(now)),
+              WidthBox(width: AppDimensions.s12.w),
+              const VerticalDividerLine(height: 20),
+              WidthBox(width: AppDimensions.s12.w),
+              Flexible(child: locationItem(showPlaceholder, locationLabel)),
+            ],
+          );
+        }
+
+        return Wrap(
+          spacing: AppDimensions.s12.w,
+          runSpacing: AppDimensions.s8.h,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                item(AppAssets.calendar, Formatters.date(now)),
-                WidthBox(width: AppDimensions.s12.w),
-                const VerticalDividerLine(height: 16),
-                WidthBox(width: AppDimensions.s12.w),
-                item(AppAssets.clock, Formatters.time(now)),
-              ],
-            ),
-            HeightBox(height: AppDimensions.s8.h),
+            item(AppAssets.calendar, Formatters.date(now)),
+            const VerticalDividerLine(height: 20),
+            item(AppAssets.clock, Formatters.time(now)),
+            const VerticalDividerLine(height: 20),
             locationItem(showPlaceholder, locationLabel),
           ],
         );
-      }
-
-      if (fitWidth) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            item(AppAssets.calendar, Formatters.date(now)),
-            WidthBox(width: AppDimensions.s12.w),
-            const VerticalDividerLine(height: 20),
-            WidthBox(width: AppDimensions.s12.w),
-            item(AppAssets.clock, Formatters.time(now)),
-            WidthBox(width: AppDimensions.s12.w),
-            const VerticalDividerLine(height: 20),
-            WidthBox(width: AppDimensions.s12.w),
-            Flexible(child: locationItem(showPlaceholder, locationLabel)),
-          ],
-        );
-      }
-
-      return Wrap(
-        spacing: AppDimensions.s12.w,
-        runSpacing: AppDimensions.s8.h,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          item(AppAssets.calendar, Formatters.date(now)),
-          const VerticalDividerLine(height: 20),
-          item(AppAssets.clock, Formatters.time(now)),
-          const VerticalDividerLine(height: 20),
-          locationItem(showPlaceholder, locationLabel),
-        ],
-      );
-    });
+      },
+    );
   }
 }

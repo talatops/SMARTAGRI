@@ -71,7 +71,11 @@ abstract final class AppDimensions {
   static const double soilTileRowHeightMobile = 196;
   static const double soilTileRowHeightTablet = 178;
 
+  static const double headerLogoHeight = 52;
+
   static const double loaderMaxWidth = 420;
+  static const double loaderBrandWidth = 390;
+  static const double loaderBrandGap = 24;
   static const double loaderRingSize = 88;
   static const double loaderRingStroke = 2;
   static const double loaderLogoSize = 40;

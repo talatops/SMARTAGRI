@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/app_text_styles.dart';
+import '../utils/app_assets.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_dimensions.dart';
 import '../utils/app_durations.dart';
@@ -55,6 +56,12 @@ class _AppLoaderState extends State<AppLoader> with TickerProviderStateMixin {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Image.asset(
+              AppAssets.iradaLogo,
+              width: AppDimensions.loaderBrandWidth,
+              filterQuality: FilterQuality.medium,
+            ),
+            const SizedBox(height: AppDimensions.loaderBrandGap),
             SizedBox.square(
               dimension: AppDimensions.loaderRingSize,
               child: Stack(
