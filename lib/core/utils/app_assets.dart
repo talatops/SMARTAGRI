@@ -38,6 +38,8 @@ abstract final class AppAssets {
   static const cropSugarcane = Icons.park_rounded;
   static const cropMaize = Icons.grain_rounded;
 
+  static const iradaLogo = 'assets/irada_logo.png';
+
   static const _weather = 'assets/icons/weather';
   static const weatherClearDay = '$_weather/clear_day.svg';
   static const weatherClearNight = '$_weather/clear_night.svg';
