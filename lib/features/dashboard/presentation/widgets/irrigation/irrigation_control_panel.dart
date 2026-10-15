@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/extensions/responsive_extension.dart';
 import '../../../../../core/extensions/responsive_size_extension.dart';
@@ -178,7 +179,12 @@ class _PredictionTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(AppAssets.aiPrediction, size: 22.r, color: AppColors.primaryBlue),
+          SvgPicture.asset(
+            AppAssets.aiPredictionSvg,
+            width: 22.r,
+            height: 22.r,
+            colorFilter: const ColorFilter.mode(AppColors.primaryBlue, BlendMode.srcIn),
+          ),
           WidthBox(width: AppDimensions.s12.w),
           Expanded(
             child: Column(
