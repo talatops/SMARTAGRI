@@ -23,13 +23,6 @@ Future<void> main() async {
   print(credential.user?.uid);
 
 
-
-    // final credential = await FirebaseAuth.instance.signInAnonymously();
-    // debugPrint('Anonymous login successful');
-    // debugPrint('UID: ${credential.user?.uid}');
-    // debugPrint('Is Anonymous: ${credential.user?.isAnonymous}');
-  // }
-
   runApp(const ProviderScope(child: SmartAgriApp()));
 
 }
