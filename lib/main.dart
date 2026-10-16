@@ -1,5 +1,5 @@
 
-import 'package:firebase_auth_web/firebase_auth_web.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,11 +13,11 @@ Future<void> main() async {
 
 
   // if(kDebugMode){+
-  FirebaseAuthWeb.instance;
-  final auth = FirebaseAuthWeb.instance;
+  FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance;
   final credential = await auth.signInWithEmailAndPassword(
-     'abdul.hanan@irada.pk',
-    'test@1234',
+     email:  'abdul.hanan@irada.pk',
+    password:  'test@1234',
   );
 
   print(credential.user?.uid);
