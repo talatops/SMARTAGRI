@@ -38,6 +38,9 @@ ENV PATH="/opt/flutter/bin:${PATH}" \
 USER flutter
 WORKDIR /app
 
+
+#don't mind testing the syncing
+
 # Cache dependencies first so source edits don't re-download packages
 COPY --chown=flutter:flutter pubspec.yaml pubspec.lock ./
 RUN flutter config --no-analytics \
